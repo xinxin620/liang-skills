@@ -1,0 +1,4 @@
+interface:
+  display_name: "短剧资产图提示词（本地定制）"
+  short_description: "为人物、场景、道具和生物编写来源明确、规格先行确认的可复用图片提示词"
+  default_prompt: "使用 $liang-image-prompts 为已接受资产编写可复制的人物、场景、道具或生物图片提示词。"

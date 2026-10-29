@@ -1,0 +1,4 @@
+interface:
+  display_name: "短剧资产与生图提示词"
+  short_description: "拆人物/造型/生物/场景/道具资产，确认平台规格后写可复制的生图提示词"
+  default_prompt: "使用 $liang-visual-assets-prompts 从 EP001 剧本拆资产，先出参数确认卡，确认后再写可复制生图提示词。"
