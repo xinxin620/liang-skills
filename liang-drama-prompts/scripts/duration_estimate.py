@@ -413,8 +413,9 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=None,
         help=(
-            "short-drama.json carrying format.pacing, target_seconds_per_episode "
-            "and, when accepted, creator_authority.rhythm_profile.vo_share_max"
+            "optional project JSON carrying format.pacing, "
+            "target_seconds_per_episode and, when accepted, "
+            "creator_authority.rhythm_profile.vo_share_max"
         ),
     )
     args = parser.parse_args(argv)

@@ -14,6 +14,8 @@ license: MIT
 一级标题使用 `# EP001 集名`，场景标题使用 `## EP001-SC001 内 · 地点 · 时间/天气`。
 对白写 `角色（可选表演提示）：台词`；生产标签使用 `[VO]`、`[OS]`、`[SFX]`、`[画面文字]`、
 `[连续性]`、`[转场]`。不要把含冒号的动作叙述误写成对白。
+需要骨架时复制 `assets/screenplay.md` 到 `剧集/<EP>/剧本.md` 再填，`【】` 是待填占位，填完删掉未用的示意行和注释；
+模板只是空壳，不预设剧情。
 
 ## 入口
 
@@ -65,21 +67,25 @@ license: MIT
 - 同一故事义务的不同可拍实现：[可替代实现](references/substitutable-realization.md)
 - 长单集跨上下文时的最小交接：[场景交接摘要](references/scene-handoff-capsule.md)，只留在上下文
 - 本集要用 `[VO]` 或内心独白交代信息，或有痛点要交代：[能演的不说](references/script-craft.md#44-能演的不说vo内心独白与痛点)
-- `short-drama.json` 里有 `status` 为 `accepted` 的 `creator_authority.rhythm_profile`：[项目节奏档案](references/script-craft.md#65-项目节奏档案)
+- 项目里有节奏档案配置，且其中 `creator_authority.rhythm_profile` 的 `status` 为 `accepted`：[项目节奏档案](references/script-craft.md#65-项目节奏档案)
 
 ## 时长估算（按需）
 
-用户问时长，或项目已接受节奏档案、需要核对 VO 占比时，才把索引写入系统临时目录。先用 Python 查询跨平台临时目录，把第一条命令打印的完整
-路径原样替换进后两条命令的引号内。以下每条都是一行完整命令，不依赖 shell 变量或续行符；Windows
-没有 `python3` 命令时使用 `py -3`。`--speaker` 的示例值必须替换为本集实际说话者。
-项目配置存在时，可在第三条命令末尾加 `--project short-drama.json`。只有
-`duration_estimate.py` 接受这个参数，第二条索引命令不接受：
+用户问时长、或需要核对 VO 占比时，才把索引写入系统临时目录。以下命令在**本技能目录下**执行，
+`scripts/...` 相对本技能目录；每条都是一行完整命令，不依赖 shell 变量或续行符。先确认解释器可用
+（`python3 --version` 能打印版本号），需要 Python 3.9 或更高版本；没有可用解释器时按下方口径手算，
+不要为跑脚本临时装环境。`--speaker` 的示例值必须替换为本集实际说话者。
 
 ```text
 python3 -c "from pathlib import Path; import tempfile, uuid; print(Path(tempfile.gettempdir()) / ('short-drama-' + uuid.uuid4().hex + '.jsonl'))"
-python3 "{技能目录}/scripts/screenplay_index.py" "剧集/EP001/剧本.md" --output "粘贴第一条命令输出的完整路径" --speaker "本集角色一" --speaker "本集角色二"
-python3 "{技能目录}/scripts/duration_estimate.py" "剧集/EP001/剧本.md" --index "粘贴第一条命令输出的完整路径"
+python3 scripts/screenplay_index.py "剧集/EP001/剧本.md" --output "粘贴第一条命令输出的完整路径" --speaker "本集角色一" --speaker "本集角色二"
+python3 scripts/duration_estimate.py "剧集/EP001/剧本.md" --index "粘贴第一条命令输出的完整路径"
 ```
+
+把第一条命令打印的完整路径原样替换进后两条命令的引号内。项目里确实存在带
+`format.pacing` 的项目配置时，才在第三条命令末尾加 `--project <该配置路径>`；这条参数只有
+`duration_estimate.py` 接受，第二条索引命令不接受。没有该配置时不加，脚本只报告可数事实、不猜秒数，
+这与手工按真实朗读通读判断并不冲突。
 
 **改稿后重跑**：第二条命令写过一次的输出路径不能直接再写一次，会以 `already holds an index` 失败。
 要保留原有块 ID，改稿前先保存旧剧本快照，重跑第二条命令时同时加
@@ -101,8 +107,8 @@ python3 "{技能目录}/scripts/duration_estimate.py" "剧集/EP001/剧本.md" -
 
 用户点名的范围已写入，场景因果连贯，对白与行动可表演，承诺得到兑现或有意延迟，结尾完成本集预定的戏剧或情绪功能，即完成。最后一拍按本集结尾功能判断，不以新增事件作为完成条件。
 资产、分镜、审查与生产只有用户点名时开始。
-写完本阶段文档后，可转 `$short-drama` 做局部机械核对（只核对已有文档）；五份齐备后再做完整核对。内容质量仍由创作者审查。
+写完本阶段文档后，按需转下游技能：资产与设定走 `$liang-visual-assets-prompts`，图片提示词走 `$liang-image-prompts`，分镜走 `$liang-h3-storyboard-prompts`。是否开始由用户点名，本技能不自动串联。剧本内容质量始终由创作者审查；上游规划要改，交回用户的规划材料，本技能不新增第二份规划事实。
 
 ## 安装维护
 
-只有安装、升级或排障时运行 `python3 scripts/selftest.py`。
+脚本需要 Python 3.9 或更高版本，其余功能不依赖 Python。排障或升级时在本技能目录下运行 `python3 scripts/selftest.py`。本机若没有可用的解释器（Windows 上 `python`/`python3` 可能只是 Microsoft Store 的占位别名，`py` 也可能不存在），先 `python3 --version` 确认能打印出版本号再执行；没有解释器时跳过全部脚本，时长按上文「时长估算」的手算口径并结合通读判断，不要为跑脚本而临时安装环境。
