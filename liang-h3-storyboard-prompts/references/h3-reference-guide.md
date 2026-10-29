@@ -21,11 +21,15 @@
 
 ## 2. 全局编号规则
 
-- `<Picture N>` 是**全局素材编号**，跨场次累加：一张图定号终身不变，新图按上传顺序接号，
-  不重排、不复用、不跳号。同一场引用不相邻的号（1、2、7、10）正常，不要为"连续好看"改号。
+- `<Picture N>` 是**本 job（本单元）内的挂图顺序编号**：第 1 张图是 `<Picture 1>`，视频、
+  音频各自从 1 数起。**不同单元各自从 1 重新编号**——这是官方规则，也是多镜容器合法
+  重编号的前提（见第 4 节），不要写成"跨场次累加、终身不变"。
+- 同一单元里，手写编号必须与挂图 `顺序` 一致：两套编号不一致时模型收到矛盾素材说明，
+  接口不会报错。同一单元内引用不相邻的号（1、2、7、10）正常，不要为"连续好看"改号。
 - `<Subject N>` 编号独立于 Picture：Subject 是主体的抽象定义，指向哪张图由文字写明
   （`<Subject 3> is Feng in <Picture 7>`）。**Subject 编号 ≠ Picture 编号，允许。**
-- 有台词的角色，`S` 编号与 `Subject` 编号对齐（`<Subject 1>, S1`）；没有台词的角色不写声音锁。
+- 有台词的角色，`S` 编号与 `Subject` 编号对齐（`<Subject 1>, S1`；正文里说话时写
+  `<Subject 1> (S1)`）；没有台词的角色不写声音锁。
 - 同一场景里角色的描述文字**逐字复制**，不做同义替换——改写会让模型以为换了人。
 - 写六段正文前，先把本单元参考图按 `顺序` 列一遍：
 
@@ -37,7 +41,7 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 
 手写编号必须与挂图 `顺序` 一致：两套编号不一致时模型收到矛盾素材说明，接口不会报错。
 
-素材五种角色：
+素材五种角色（外加两类素材标签）：
 
 | 类型 | 写法 | 锁住什么 |
 |---|---|---|
@@ -46,6 +50,8 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 | 站位帧 | `<Picture N> is the locked blocking reference` | 屏幕左右、机位侧、轴线 |
 | **成品帧** | `<Picture N> is the previous shot's frame` | 一图顶三图：场景＋站位＋道具＋光线＋动作接续点 |
 | 道具图 | 特写镜里引用，retention 里加"形状每镜一致" | 道具细节 |
+| **参考视频** | `<Video 1> is the source video ...` | 只用于"续接/剪辑上一段实际视频"：动作、节奏、镜头与时间结构 |
+| **参考音频** | `<Audio 1> is the voice-timbre reference for <Subject N> (Sx)` | 音色/音乐风格/对白内容/音效质感；`<Video N>` 与 `<Audio N>` 各自从 1 编号、互不配对 |
 
 **成品帧续拍**（最省素材）：上一镜已出片时直接引用，配
 `reproduce this arrangement exactly, do not mirror it, do not rearrange it`，
@@ -61,16 +67,41 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 
 ### `subject_definitions`
 
-- 句式 `<Subject 1> is ... in <Picture 2>, with ...`，把每个主体绑到标签；
-  逐字抄视觉设定里的脸型骨相、五官、识别特征、服装各层（内层也写）。
-- `<Picture N>` 单独锚场景（`anchors the environment`）、站位
-（`is the locked blocking reference: keep the same screen arrangement – do not mirror it`）、
-  成品帧（`is the previous shot's frame: the exact … to continue from`）。
+- **每个被单独追踪的条目独立一行，标签打头**（官方写法）：
+  `<Subject 1> is the ... in <Picture 2>, with ...`。逐字抄视觉设定里的
+  脸型/五官/识别特征/服装各层（内层也写）。
+- **图只用于定义某个 Subject 时，在定义行内引用（`in <Picture 2>`），不另起独立行**；
+  只有图本身是"某个镜头的首帧/关键帧/尾帧/构图锚"才单独成行
+  （`<Picture 1> is the opening composition of this shot` /
+  `anchors the environment` / `is the previous shot's frame` /
+  `is the locked blocking reference`）。
+- 同一主体来自多张素材时合并来源并写清各素材提供什么：
+  `<Subject 1> is the woman whose appearance comes from <Picture 1> and whose
+  walking motion comes from <Video 1>.`
 - 不写"角色会做某动作"——动作属于 `detailed_description`。
+- 官方完整示例（独立成行、标签打头）：
+
+```text
+subject_definitions:
+<Subject 1> is the coffee-shop environment in <Picture 1>, featuring an exposed brick wall, an orange tufted sofa, and a wooden coffee table.
+<Subject 2> is the fluffy white Samoyed in <Picture 2>, <Picture 3>, and <Picture 4>, with thick white fur, pointed ears, and a curved tail.
+<Audio 1> is the voice-timbre reference for <Subject 3> (S1), containing a spoken vocal layer.
+```
 
 ### `summary`
 
 一到三句写本单元可见状态变化，只写画面和声音能验证的结果，不写"她明白了一切"。
+**首行任务类型前缀（官方要求，方括号）**：常用 `[reference generation]`；
+关键帧当首/尾帧用则 `keyframe completion`；续接上一段实际视频则 `video continuation`；
+多个关系用 ` + ` 拼接不重复。例：
+
+```text
+[reference generation] The target video continues from the previous scene:
+Qing'er sets down the firewood and hands Shiniang a water dipper; ...
+```
+
+前缀后只用已定义的 `<Subject N>` / `<Picture N>` / `<Video N>` / `<Audio N>`，
+不在本段引入新标签。
 
 ### `retention_analysis`
 
@@ -97,6 +128,8 @@ the arrangement is never mirrored.
 
 逐镜写动作、说话人、同步声音：
 
+- 六段模式下，`[Shot 1]` 之前先写一到两句风格/基调句（T2VA 把风格放在 `[Shot 1]` 后，
+  full-reference 放在前）：`The target video uses a cinematic live-action style with ...`。
 - 第一镜无时间戳；`[Shot 2] At 00:03.500, ...` 起严格递增且小于单元时长。
 - 切镜用 `the camera cuts to / the shot transitions to / the shot changes to`；
   用户明确要求才用 cross-dissolve / fade / wipe。
@@ -104,13 +137,20 @@ the arrangement is never mirrored.
   `The camera pushes in with small amplitude at slow speed toward the folded letter in her hands.`
   可用词：Zoom/Push In-Out, Pan, Truck, Tilt, Pedestal, Arc, Tracking, Static, Shake,
   POV, Roll；`with small/large amplitude`，`at slow/fast speed`。
-- 对白只放说话人的动作事件里；`<d>[Chinese] 逐字台词</d>` 内只有语言标签和原文，
-  不翻译不改写，逐字在对白中只出现一次。
+- 官方建议正文 350–500 词（对白密集的内容优先装下完整发声时间线，不凑字数）；
+  细节按各镜信息量分配，单镜不自动变短。
+- 说话人写法：被参考主体在画内说话时写 `<Subject N> (Sx) says ...`；
+  同一主体画外音保持同一写法并标 `off-screen`；说话人不对应已定义 Subject 时，
+  用稳定声音描述 + `(Sx)`。`(Sx)` 按目标视频实际发声事件顺序首次分配，之后每个发声事件
+  复用同一 ID；`retention_analysis` 里不写 `(Sx)`。
+- 对白只放说话人的动作事件里；`<d>[Chinese] 逐字台词</d>` 内只有语言标签和逐字原文，
+  不翻译不改写，逐字台词在对白中只出现一次；句末标点用 `. ? !`。
+- 听不清的参考音频原声写 `[unclear]`，不猜不意译。
 - 台词期间有其他正脸角色：明写 `The messenger does not speak; his lips remain completely closed.`
 - 画外音：`says in an off-screen voiceover` + `while his lips remain completely closed`。
 - 对白跨切点：`<scenetrans>` 并声明 `continues seamlessly across the cut`；
   视频结束截断：`<cutoff>`（只用于剧本已要求的截断）。
-- 画面可见文字（霓虹、标牌、屏幕）用英文双引号原样保留，如 `"营业中"`；
+- 画面可见文字（霓虹、标牌、屏幕）原样保留原文并加英文双引号，如 `"营业中"`；
   非画内字幕/caption/对白叠加默认不生成，正文直接写明。
 
 ### `overall_soundscape`
@@ -149,14 +189,17 @@ Mouth discipline: only Feng moves her lips; no other character shares the frame.
 
 ### 声音锁两截
 
+写在说话者 `<Subject N>` 的 `subject_definitions` 条目尾部（官方写法，不单独成段）：
+
 ```text
-<Subject 1>, S1 is always the speaker. S1 always uses one fixed voice:
+<Subject 1> (S1) always uses one fixed voice:
 a clear, cool young woman's voice, soft in volume - now low and earnest. Do not change.
 ```
 
 - 破折号前是**终身音色**（跨场次逐字复制）；`- now …` 后是**本场状态**（可改）。
 - 本场不说话的角色：音色一个字不写（写了等于告诉模型他准备说话），
-  显式声明 `<Subject 2>, S2 stays silent in this scene and does not speak at all.`
+  显式声明 `<Subject 2> (S2) stays silent in this scene and does not speak at all.`
+  （无台词角色不分配 `(Sx)`，只写 Subject 标签。）
 
 ### 接戏：先定类型，默认硬切
 
@@ -191,6 +234,21 @@ a clear, cool young woman's voice, soft in volume - now low and earnest. Do not 
 待机角色状态（必须给明确动作，`holding her bamboo broom, watching from a distance, soft focus`，
 否则被模型删掉或乱走）。
 
+### Forbidden 三层（折进六段，不另开字段）
+
+video-storyboard 里的 `Forbidden:` / `Mandatory:` 行在 H3 六段里**不另开字段**——
+H3 只认六段。把三层风险逐项折进对应段落，每条禁令对应一个本镜真实风险，
+不堆通用负面词（短剧分镜契约的原文规则）：
+
+| 层 | 折进哪 | 写什么 |
+|---|---|---|
+| 通用（字幕/水印/越轴/镜像/脸手融合） | `retention_analysis` 站位条目 + `detailed_description` 各镜 | "不生成字幕/水印"在正文直接写明；越轴/镜像写进站位条目（`do not mirror it`）；贴身镜在动作当场补分离句 |
+| 特效（不可能动作路径、慢动作、特效化） | `detailed_description` 事件帧 | 三拍结构（前一态 → 无脸闪光帧 → 硬切后一态）；不写过程；不出现 slow motion / speed ramp |
+| AI 感（磨皮、塑料反光、奇幻光晕） | 各镜 + 声音段之外的视觉风险句 | 具体到本镜最可能出感的那张脸/那件道具；无对应风险就不写 |
+
+武戏分支的"已知可改进处 1. 缺全局 Forbidden 收尾"就是这一条的官方化说法：
+末尾不补 `Forbidden:` 独立行，改为把通用层逐条折进六段对应位置。
+
 ### 镜头边界与容器内时间戳
 
 多镜容器（一个 job 多个 `[Shot N]`）资格三条件：
@@ -218,12 +276,15 @@ H3 中文小样本约 **4.1 个可发声字/秒**，较密的输入会赶词或�
 
 | 字段 | 中文译法 |
 |---|---|
-| `subject_definitions:` | **主体定义：**（逐条译，标签 `<Subject N>` 保留） |
-| `summary:` | **概要：** |
+| `subject_definitions:` | **主体定义：**（逐条译，标签 `<Subject N>`/`<Picture N>`/`<Video N>`/`<Audio N>` 保留） |
+| `summary:` | **概要：**（首行任务类型前缀译法：`[reference generation]` 参考生成 / `keyframe completion` 关键帧补全 / `video continuation` 视频续接 / `video editing` 视频剪辑 / `audio reuse` 音频复用 / `audio reference` 音频参考） |
 | `retention_analysis:` | **保留分析：**（保留强度译法见下） |
 | `detailed_description:` | **分镜正文：**（逐镜译，`[Shot N]` 保留编号） |
 | `overall_soundscape:` | **环境声底：** |
 | `non_diegetic_music:` | **非画内配乐：**（`N/A` 译"无"） |
+
+补充译法：`<Video 1> is the source video ...` 译"是源视频…"；
+`<Audio 1> is the voice-timbre reference for <Subject 3> (S1)` 译"是 <Subject 3> (S1) 的音色参考"。
 
 保留强度：`fully_preserved` 完整保留 / `partially_preserved` 部分保留 /
 `attribute_transfer` 属性转移 / `weak_reference` 弱参考；

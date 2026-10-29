@@ -91,10 +91,13 @@ first_last_frame）与人物设定图（定妆照 / 四视图）作为配套能�
 
 ### H3 提示词（reference：六段；base / first_frame / first_last_frame：三段）
 
-subject_definitions: ...
-summary: ...
-retention_analysis: ...
-detailed_description: [Shot 1] ... [Shot 2] At 00:03.500, ... <d>[Chinese]逐字台词</d>
+```text
+subject_definitions:
+<Subject 1> is 【角色】 in <Picture 1>, with 【脸型骨相 + 五官 + 识别特征 + 服装各层】.
+<Picture 3> anchors the environment: 【布局、家具、光、色】.
+summary: [reference generation] 【一到三句可见状态变化】
+retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【保留什么】.
+detailed_description: [Shot 1] ... <Subject 1> (S1) says: <d>[Chinese]逐字台词</d> [Shot 2] At 00:03.500, ...
 overall_soundscape: ...
 non_diegetic_music: N/A
 ```
@@ -117,16 +120,24 @@ non_diegetic_music: N/A
 - `结束帧`：已接受终态，必须与起始帧同时出现（本套件不用 L2VA 尾帧推断开场）。
 
 每张参考图只承担它在 `用途` 和 `控制` 里声明的事。角色图不决定站位，场景图不决定脸，
-站位图不决定人物身份。素材编号按同类素材在本单元「输入参考图」里的 `顺序` 递增：
-第 1 张图是 `<Picture 1>`，视频、音频各自从 1 数起；编号必须和挂图顺序一致，
+站位图不决定人物身份。素材编号按同类素材**在本单元「输入参考图」里**的 `顺序` 递增：
+第 1 张图是 `<Picture 1>`，视频、音频各自从 1 数起（每个单元/job 各自从 1 起，
+多镜容器合法重编号的前提）；编号必须和挂图顺序一致，
 两套编号不一致时模型会收到矛盾说明而接口不报错。
 
 ## H3 正文规则（reference 六段为主）
 
-- `subject_definitions`：`<Subject N> is ... in <Picture M>, with ...` 句式，
-  逐字抄视觉设定里的脸型/五官/识别特征/服装各层；`<Picture N>` 单独锚场景/站位/成品帧。
-  不写动作。
-- `summary`：一到三句写本单元的可见状态变化，不写抽象情绪结论。
+- `subject_definitions`：每个条目独立一行，标签打头（官方写法）：
+  `<Subject 1>` 独立成行，定义行写 `<Subject 1> is the ... in <Picture 2>, with ...`，
+  逐字抄视觉设定里的脸型/五官/识别特征/服装各层；图只用于定义某个 Subject 时
+  在定义行内引用（`in <Picture 2>`），不另起独立行；
+  图本身锚场景/站位/成品帧/关键帧才单独成行
+  （`<Picture 1> is the opening composition of this shot` /
+  `anchors the environment` / `is the previous shot's frame`）。不写动作。
+- `summary`：一到三句写本单元的可见状态变化，不写抽象情绪结论；
+  **首行官方任务类型前缀**（常用 `[reference generation]`；关键帧当首/尾帧用
+  `keyframe completion`，续接上一段实际视频 `video continuation`，多关系 ` + ` 拼接）；
+  前缀后只用已定义标签，不引入新标签。
 - `retention_analysis`：逐条写标签、出现镜次、保留强度（`fully_preserved /
   partially_preserved / attribute_transfer / weak_reference`；音频
   `fully_copy / partially_copy / reference / weak_reference`）。站位图必须写明

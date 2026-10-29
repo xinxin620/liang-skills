@@ -1,5 +1,13 @@
 # 高动态模式（武戏 / 打斗 / 高动态三段式）
 
+> **H3 桥接（本 skill 专用）**：原文为 video-storyboard 三段结构（`Audio:`/`Forbidden:`/`Mandatory:` 为自造字段，H3 不识别）。
+> 在 `liang-h3-storyboard-prompts` 里产出时：① 外壳换成 H3 六段——角色锁定区并入 `subject_definitions`（条目独立成行、
+> 标签打头，描述文字照用中文+全程锁定写法），正文（12 拍拍链）进 `detailed_description`，
+> 结尾 `Audio:`/`Mandatory:` 内容折进 `overall_soundscape` / `non_diegetic_music` 官方字段；
+> ② `Forbidden:` 三层（字幕/水印/越轴/脸手＋特效＋AI 感）逐条折进六段对应位置，不另开字段；
+> ③ `summary` 首行加任务类型前缀 `[reference generation]`；④ 有台词时回到文戏单人镜覆盖法，
+> 嘴型纪律照文戏规则补。下文按原 video-storyboard 格式保留，作为内容手册使用。
+
 触发词：**高动态、打斗、武戏、动作戏、近身缠斗、用高动态那套词**。
 
 ## 与文戏模式的八处根本差异

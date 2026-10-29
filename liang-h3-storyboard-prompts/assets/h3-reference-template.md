@@ -18,27 +18,38 @@
 ### H3 提示词（一次整体提交）
 
 ```text
-<Subject 1> is 【角色名】 in <Picture 1>: 【身份 + 服装 + 发式 + 佩饰，逐字抄视觉设定】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image.
-<Subject 2> is 【角色名】 in <Picture 2>: 【身份 + 服装 + 发式】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image.
+subject_definitions:
+<Subject 1> is 【角色名】 in <Picture 1>, with 【身份 + 脸型骨相 + 五官 + 识别特征 + 服装各层，逐字抄视觉设定】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image. <Subject 1> (S1) always uses one fixed voice: 【终身固定音色】 - now 【本场状态】. Do not change.
+<Subject 2> is 【角色名】 in <Picture 2>, with 【身份 + 脸型 + 服装各层】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image.
 <Picture 3> anchors the environment: 【场景 + 固定家具 + 光源方向 + 色调】. Preserve its layout, palette and lighting exactly.
 <Picture 4> is the locked blocking reference: keep the same screen arrangement - do not mirror it.
 <Picture 5> is the previous shot's frame: the exact 【地点】, lighting, prop arrangement and character positions to continue from.
-<Subject 1>, S1 is always the speaker. S1 always uses one fixed voice: 【终身固定音色】 - now 【本场状态】. Do not change.
-【不说话的成员：<Subject N>, SN stays silent in this scene and does not speak at all.（音色一个字不写）】
-
-subject_definitions: <Subject 1> is 【角色】 in <Picture 1>, with 【脸型骨相 + 五官 + 识别特征 + 服装各层】. <Subject 2> is ... in <Picture 2>, ... <Picture 3> anchors the environment: 【布局、家具、光、色】. <Picture 4> is the locked blocking reference: preserve screen arrangement and axis; do not mirror it. <Picture 5> is the previous shot's frame: the exact 【地点】, lighting, prop arrangement and character positions to continue from.
-summary: 【一到三句本单元可见状态变化，不写抽象结论】
+【不说话的成员：在对应 Subject 条目尾部声明 <Subject N> (SN) stays silent in this scene and does not speak at all.（音色一个字不写；无台词角色不写声音锁）】
+【多镜容器时，正文第一行（subject_definitions 之前）加对齐句：<Picture 1> aligns with the 0.00-second mark as the opening frame of [Shot 1]; <Picture 2> aligns with the 3.00-second mark as the frame of [Shot 2]; ...（各切点秒数与 [Shot N] 的 At 时间戳一致）】
+【风格基调句放 [Shot 1] 之前（六段模式要求）：The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.】
+summary: [reference generation] 【一到三句本单元可见状态变化，不写抽象结论；前缀按实际任务类型选，如 keyframe completion / video continuation，多关系用 + 拼接】
 retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【脸型、服装层、比例、身高关系】; pose follows this unit. <Picture 3> (appears in [Shot 1]–[Shot N]): partially_preserved - 【布局与色光保留，道具摆位随本单元】. <Picture 4> (appears in [Shot 1]–[Shot N]): fully_preserved - 【A stays screen-LEFT, B stays screen-RIGHT; axis never crossed; arrangement never mirrored】.
-detailed_description: [Shot 1] 【景别】, 【角色】 alone, sharp: 【情绪副词；可见身体小动作】. S1 says:
+detailed_description: [Shot 1] 【景别】, <Subject 1> (S1) alone, sharp: 【情绪副词；可见身体小动作】. <Subject 1> (S1) says:
 <d>[Chinese]【逐字台词】</d>
-Mouth discipline: only 【角色】 moves her lips; no other character shares the frame. [Shot 2] At 00:03.500, 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed. 【多镜容器时正文第一行加对齐句：<Picture 1> aligns with the 0.00-second mark as the opening frame of [Shot 1]; ...】
+Mouth discipline: only 【角色】 moves her lips; no other character shares the frame. [Shot 2] At 00:03.500, 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
 overall_soundscape: 【一到四句：环境声 + 物理音效 + 非语言人声，不重复对白】
 non_diegetic_music: N/A
 ```
 
 ## 填空提示
 
-- **每句台词一个单人镜**：`<角色> alone, sharp` + 该镜 `Mouth discipline: only <角色> moves her lips; no other character shares the frame.`——防串嘴最有效的一条。禁止"两张脸都实焦"的双人镜配台词。
+- **结构顺序固定**：`subject_definitions → summary → retention_analysis → detailed_description → overall_soundscape → non_diegetic_music`，六段同一条正文一次提交；
+  多镜容器的对齐句写在 `subject_definitions` 之前（正文第一行），风格基调句写在 `[Shot 1]` 之前。
+- **条目独立成行、标签打头**：`subject_definitions:` 之后每个被单独追踪的主体各占一行，标签写在行首（官方写法）；
+  图只用于定义某个 Subject 时在定义行内写 `in <Picture N>`，不另起一行。
+- **summary 首行任务类型前缀**：默认 `[reference generation]`；关键帧当首/尾帧用写 `keyframe completion`，
+  续接上一段实际视频写 `video continuation`，多关系用 ` + ` 拼接不重复。
+- **声音锁折进 Subject 条目**：终身音色写在说话者 Subject 条目尾部
+  （`<Subject 1> (S1) always uses one fixed voice: … - now …`），不再单独成段；
+  不说话的成员写 `stays silent` 声明，音色一个字不写。
+- **说话人写法 `<Subject N> (Sx)`**：被参考主体在画内说话时两者同写；画外音标 `off-screen`；
+  无台词角色不分配也不复用 `(Sx)`。
+- **每句台词一个单人镜**：`<Subject N> (Sx) alone, sharp` + 该镜 `Mouth discipline: only <角色> moves her lips; no other character shares the frame.`——防串嘴最有效的一条。禁止"两张脸都实焦"的双人镜配台词。
 - **情绪配动作**：情绪副词 + 可见身体小动作，两句都给（`quiet and halting, each word costing her something; one hand tightens on her sleeve`）。
 - **声音锁两截**：破折号前终身音色，`- now …` 本场状态。
 - **场景陈设与道具摆位每镜重述**；成品帧续拍必写 `do not mirror it, do not rearrange it`。

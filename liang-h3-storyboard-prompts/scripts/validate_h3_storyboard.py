@@ -103,7 +103,13 @@ def validate_subject_picture_labels(prompt: str, unit: str) -> list[Issue]:
         prompt,
         re.MULTILINE,
     )
-    definitions = definitions_match.group(1) if definitions_match else ""
+    if definitions_match is None:
+        return issues
+    start = definitions_match.end()
+    next_section = re.search(r"^(?:summary|retention_analysis)\s*:", prompt[start:], re.MULTILINE)
+    definitions = (
+        prompt[start:start + next_section.start()] if next_section else prompt[start:]
+    )
 
     subject_tags = {f"<Subject {value}>" for value in re.findall(r"<Subject\s+(\d+)>", prompt)}
     missing_subjects = sorted(tag for tag in subject_tags if tag not in definitions)
