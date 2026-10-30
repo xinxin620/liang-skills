@@ -99,7 +99,7 @@ def has_section(prompt: str, section: str) -> bool:
 def validate_subject_picture_labels(prompt: str, unit: str) -> list[Issue]:
     issues: list[Issue] = []
     definitions_match = re.search(
-        r"^subject_definitions\s*:\s*(.*)$",
+        r"^subject_definitions[ \t]*:[ \t]*(.*)$",
         prompt,
         re.MULTILINE,
     )
