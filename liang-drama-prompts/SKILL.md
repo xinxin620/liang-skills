@@ -73,13 +73,14 @@ license: MIT
 
 用户问时长、或需要核对 VO 占比时，才把索引写入系统临时目录。以下命令在**本技能目录下**执行，
 `scripts/...` 相对本技能目录；每条都是一行完整命令，不依赖 shell 变量或续行符。先确认解释器可用
-（`python3 --version` 能打印版本号），需要 Python 3.9 或更高版本；没有可用解释器时按下方口径手算，
+（`python --version` 能打印版本号；Windows 用 `python`，`python3` 常是 Microsoft Store 占位别名），
+需要 Python 3.9 或更高版本；没有可用解释器时按下方口径手算，
 不要为跑脚本临时装环境。`--speaker` 的示例值必须替换为本集实际说话者。
 
 ```text
-python3 -c "from pathlib import Path; import tempfile, uuid; print(Path(tempfile.gettempdir()) / ('short-drama-' + uuid.uuid4().hex + '.jsonl'))"
-python3 scripts/screenplay_index.py "剧集/EP001/剧本.md" --output "粘贴第一条命令输出的完整路径" --speaker "本集角色一" --speaker "本集角色二"
-python3 scripts/duration_estimate.py "剧集/EP001/剧本.md" --index "粘贴第一条命令输出的完整路径"
+python -c "from pathlib import Path; import tempfile, uuid; print(Path(tempfile.gettempdir()) / ('short-drama-' + uuid.uuid4().hex + '.jsonl'))"
+python scripts/screenplay_index.py "剧集/EP001/剧本.md" --output "粘贴第一条命令输出的完整路径" --speaker "本集角色一" --speaker "本集角色二"
+python scripts/duration_estimate.py "剧集/EP001/剧本.md" --index "粘贴第一条命令输出的完整路径"
 ```
 
 把第一条命令打印的完整路径原样替换进后两条命令的引号内。项目里确实存在带
@@ -111,4 +112,4 @@ python3 scripts/duration_estimate.py "剧集/EP001/剧本.md" --index "粘贴第
 
 ## 安装维护
 
-脚本需要 Python 3.9 或更高版本，其余功能不依赖 Python。排障或升级时在本技能目录下运行 `python3 scripts/selftest.py`。本机若没有可用的解释器（Windows 上 `python`/`python3` 可能只是 Microsoft Store 的占位别名，`py` 也可能不存在），先 `python3 --version` 确认能打印出版本号再执行；没有解释器时跳过全部脚本，时长按上文「时长估算」的手算口径并结合通读判断，不要为跑脚本而临时安装环境。
+脚本需要 Python 3.9 或更高版本，其余功能不依赖 Python。排障或升级时在本技能目录下运行 `python scripts/selftest.py`（只在这两种场合跑）。本机若没有可用的解释器（Windows 上 `python`/`python3` 可能只是 Microsoft Store 的占位别名，`py` 也可能不存在），先 `python --version` 确认能打印出版本号再执行；没有解释器时跳过全部脚本，时长按上文「时长估算」的手算口径并结合通读判断，不要为跑脚本而临时安装环境。

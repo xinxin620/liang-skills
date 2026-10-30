@@ -128,6 +128,21 @@ non_diegetic_music: N/A
 - `结束帧`：已接受终态，必须与起始帧同时出现（本套件不用 L2VA 尾帧推断开场）。
 
 每张参考图只承担它在 `用途` 和 `控制` 里声明的事。角色图不决定站位，场景图不决定脸，
+**图归属铁律（一张图只能属于一个主体）。** `<Picture 1>` 是"第 1 张挂图"，不是"第 1 个角色"。
+`<Subject N>` 与 `<Picture N>` 是两套独立编号：
+
+- 图归属由 `- 主体映射：` 写死：`<Subject 2> = 女儿 = <Picture 1> = S2` 表示
+  `<Picture 1>` 是女儿的图，**只有女儿**能在定义行里写 `in <Picture 1>`。
+- 同一单元里另一个角色（画外、只作身份定义）**没有图**，定义行不许写 `in <Picture N>`，要写
+  `<Subject 1> is the … , defined by this description only (no reference picture for her in this
+  clip), with …`；中文写 `<Subject 1> 是…（本单元没有她的参考图，只按文字定义）：…`。
+  否则模型会把同一张脸安到两个人身上——母女变同一张脸，是本套件最常见的翻车。
+- `<Picture N>` 的角色行必须点名归属：`<Picture 1> defines the identity, face and costume of
+  <Subject 2> only`，不写"这张图定义身份"这种无主句。
+- `<Picture N> anchors the environment` 只能给 `用途：地理` 的图；身份图不许当场景锚。
+- 因此"身份图是 `<Picture 1>`、环境图是 `<Picture 2>`"完全正常：不要为了编号好看把场景图排到 1，
+  也不要因为"母亲是 Subject 1"就以为她是 `Picture 1`。
+
 站位图不决定人物身份。素材编号按同类素材**在本单元「输入参考图」里**的 `顺序` 递增：
 第 1 张图是 `<Picture 1>`，视频、音频各自从 1 数起（每个单元/job 各自从 1 起，
 多镜容器合法重编号的前提）；编号必须和挂图顺序一致，
@@ -206,6 +221,7 @@ non_diegetic_music: N/A
 - [ ] 每单元有唯一状态链、4–15 秒整数时长、明确模式、完整六段（或三段）正文
 - [ ] 代码块外没有任何独立成行的 `<Subject N>` / `<Picture N>` 标签定义（文件头、单元元数据、分镜表都不许）
 - [ ] 每个 `<Subject N>`、`<Picture N>`、`Sx` 都有唯一定义且跨单元一致；编号与挂图 `顺序` 一致
+- [ ] 一张图只属于一个主体：无参考图的角色写成 `defined by this description only`，没写 `in <Picture N>`；场景锚只给 `用途：地理` 的图
 - [ ] 每张参考图有 `顺序`、中文名、`用途`、`控制`、`不得控制`
 - [ ] 分镜表里每句台词都在某 `[Shot N]` 里以 `<d>[Chinese]…</d>` 落地
 - [ ] 每句台词有单人镜覆盖（或过肩虚化/双人单实焦兜底），该镜有 Mouth discipline 行
@@ -217,10 +233,20 @@ non_diegetic_music: N/A
 - [ ] 无 BGM 时 `non_diegetic_music: N/A`；有 BGM 时写清切断点
 - [ ] 每个单元两个代码块：英文正文块 + 中文对照块，各自可整段复制，块内不混语言
 - [ ] 中文对照块紧跟英文块，段落顺序与字段名逐条对应、逐句翻译
-- [ ] 结构校验通过（`python scripts/validate_h3_storyboard.py <成稿路径>`）
+- [ ] 结构校验只跑过一次且通过（`python scripts/validate_h3_storyboard.py <成稿路径>`）
 
 修订时保留未受影响的 `H3-UNIT-...` 和 `SHOT-...` ID；拆分、合并或改参考图后，
 明确哪些下游 job 需要重新生成。
+
+**校验只跑一次，不迭代。** 成稿写完跑一次 `python scripts/validate_h3_storyboard.py <成稿路径>`：
+
+- Windows 用 `python`，不要用 `python3`（`python3` 常是 Microsoft Store 占位别名，会报错或弹商店）。
+  用系统已装的解释器，不要去找 ComfyUI、其他软件自带的 python 当运行时。
+- 有报错就按报错改**成稿**一轮，再跑一次确认；两次仍不过，把剩余问题写进交付说明交创作者判断，
+  不要继续循环。
+- **不要改 `scripts/validate_h3_storyboard.py` 去迁就成稿**，也不要为验证校验器另造反例文件
+  （`_neg*.md`、`_test_*.md`、`tmp_*.py`）。校验器是尺子，不是交付物。
+- 交付前把临时脚本和测试稿删干净。
 
 ## 按需知识
 
@@ -229,4 +255,4 @@ non_diegetic_music: N/A
 - 高动态武戏（12 拍三段式、镜头纪律、无胜负收尾）：[references/mode-action.md](references/mode-action.md)
 - 人物模式（定妆照七段、四视图、量化精度、识别特征）：[references/mode-character.md](references/mode-character.md)
 - 可复制空模板：[H3 参考生模板](assets/h3-reference-template.md)
-- 结构检查：`python scripts/validate_h3_storyboard.py <成稿路径>`
+- 结构检查（只跑一次）：`python scripts/validate_h3_storyboard.py <成稿路径>`

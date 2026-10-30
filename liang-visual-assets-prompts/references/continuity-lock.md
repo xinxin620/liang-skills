@@ -117,11 +117,11 @@ sweater`），但不能改写锁面内部——少一个 `stand-collar`、多一
 - 把服装锁写在人物条目下并用 `入画`——手部特写、眼部大特写也列这个人物，会被迫写进看不见的
   衣服。服装锁写在 `造型` 条目下，分镜只在衣服入画时列这个造型。
 
-## 校验
+## 校验（只跑一次）
 
 ```bash
-python3 scripts/check_assets.py 剧集/<EP> --partial   # 只有视觉设定时
-python3 scripts/check_assets.py 剧集/<EP>             # 视觉设定 + 资产生图提示词
+python scripts/check_assets.py 剧集/<EP> --partial   # 只有视觉设定时
+python scripts/check_assets.py 剧集/<EP>             # 视觉设定 + 资产生图提示词
 ```
 
 检查器机械核对：锁的语法、`镜头：` 范围可解析、`生图提示词项：` 指向的 `IMG-...` 是否

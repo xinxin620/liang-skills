@@ -57,6 +57,13 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 `reproduce this arrangement exactly, do not mirror it, do not rearrange it`，
 一并封掉道具被挪、光线换向、人物换位三种漂移。
 
+**一张图只属于一个主体。** 角色图挂成 `<Picture 1>` 后，只有 `- 主体映射：` 里对应它的那个
+`<Subject N>` 能写 `in <Picture 1>`。同单元里另一个角色若没有自己的图，写成
+`<Subject 2> is the …, defined by this description only (no reference picture for her in this clip), with …`，
+绝不能也写 `in <Picture 1>`——那会让两个人共用一张脸。无主句
+`<Picture 1> defines the identity …` 也要补成 `<Picture 1> defines the identity … of <Subject 1> only`。
+`<Picture N> anchors the environment` 只能给 `用途：地理` 的图。
+
 素材不足（只给了角色图）：`<Picture N>` 只留给真实上传的图，不要引用不存在的号——
 缺场景图用一行 `Environment: …` 文字锁死；缺站位帧用一行 `Locked blocking (do not mirror): …`
 写成死规则，后续镜头原样复述。

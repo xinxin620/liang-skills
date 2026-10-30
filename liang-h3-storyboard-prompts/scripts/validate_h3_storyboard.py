@@ -163,6 +163,83 @@ def validate_stray_tags(block: str, unit: str) -> list[Issue]:
     return issues
 
 
+def validate_picture_ownership(block: str, prompt: str, unit: str) -> list[Issue]:
+    """Each <Picture N> may be the identity source of exactly one subject.
+
+    The classic failure: one character image is registered as <Picture 1>, but the
+    other (off-screen) character is also defined as "in <Picture 1>". The model then
+    pulls the same face onto both subjects. Picture 1 must belong to the subject
+    that `- 主体映射：` assigns it to; anyone else is text-only.
+    """
+    issues: list[Issue] = []
+
+    mapping: dict[str, str] = {}
+    meta = re.search(r"^-\s*主体映射[：:]\s*(.*)$", block, re.MULTILINE)
+    if meta:
+        for chunk in re.split(r"[；;]", meta.group(1)):
+            sub = re.search(r"<Subject\s+(\d+)>", chunk)
+            pic = re.search(r"<Picture\s+(\d+)>", chunk)
+            if sub and pic:
+                mapping[sub.group(1)] = pic.group(1)
+
+    defs_match = re.search(r"^subject_definitions[ \t]*:[ \t]*(.*)$", prompt, re.MULTILINE)
+    if defs_match is None:
+        return issues
+    start = defs_match.end()
+    next_section = re.search(r"^(?:summary|retention_analysis)\s*:", prompt[start:], re.MULTILINE)
+    definitions = prompt[start: start + next_section.start()] if next_section else prompt[start:]
+
+    claimed: dict[str, str] = {}
+    for line in definitions.splitlines():
+        sub = re.match(r"^\s*<Subject\s+(\d+)>", line)
+        if sub is None:
+            continue
+        subject = sub.group(1)
+        refs = re.findall(r"in\s+<Picture\s+(\d+)>", line)
+        for picture in refs:
+            if subject in mapping and mapping[subject] != picture:
+                issues.append(
+                    Issue(
+                        unit,
+                        f"<Subject {subject}> 被写成 in <Picture {picture}>，"
+                        f"但主体映射里它对应 <Picture {mapping[subject]}>——图归属矛盾",
+                    )
+                )
+            elif subject not in mapping and picture in mapping.values():
+                owner = [s for s, pic in mapping.items() if pic == picture][0]
+                issues.append(
+                    Issue(
+                        unit,
+                        f"<Subject {subject}> 不在主体映射里，却写成 in <Picture {picture}>，"
+                        f"而 <Picture {picture}> 已属于 <Subject {owner}>——"
+                        f"无参考图的角色只能按文字定义，不得借图",
+                    )
+                )
+            claimed.setdefault(picture, subject)
+
+    env_pictures = re.findall(
+        r"^\s*<Picture\s+(\d+)>\s+anchors the environment", definitions, re.MULTILINE
+    )
+    registered = {}
+    ref_line = re.search(r"^-\s*参考图[：:]\s*(.*)$", block, re.MULTILINE)
+    if ref_line:
+        for order, purpose in re.findall(
+            r"顺序[：:]\s*(\d+)[）)]?[^；;]*?用途[：:]\s*([^；;）)]+)", ref_line.group(1)
+        ):
+            registered[order] = purpose.strip()
+    for picture in env_pictures:
+        purpose = registered.get(picture)
+        if purpose is not None and "地理" not in purpose:
+            issues.append(
+                Issue(
+                    unit,
+                    f"<Picture {picture}> 被写成 anchors the environment，"
+                    f"但参考图登记用途是「{purpose}」——场景锚只能用用途：地理 的图",
+                )
+            )
+    return issues
+
+
 def validate_speaker_mapping(prompt: str, voice_mapping: str | None, unit: str) -> list[Issue]:
     if not voice_mapping:
         return []
@@ -273,6 +350,7 @@ def validate_unit(unit: str, block: str) -> list[Issue]:
             issues.append(Issue(unit, "retention_analysis 未写保留强度"))
 
     issues.extend(validate_stray_tags(block, unit))
+    issues.extend(validate_picture_ownership(block, prompt, unit))
     issues.extend(validate_subject_picture_labels(prompt, unit))
     issues.extend(validate_speaker_mapping(prompt, values["声线映射"], unit))
     issues.extend(validate_dialogue_tags(prompt, unit))

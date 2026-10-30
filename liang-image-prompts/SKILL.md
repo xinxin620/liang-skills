@@ -207,4 +207,5 @@ SHOT 与终点，沿用视觉事实和参考范围，不重新设计动作。实
 
 ## 安装维护
 
-只有安装、升级或排障时运行 `python3 scripts/selftest.py`。
+只有安装、升级或排障时运行 `python scripts/selftest.py`（Windows 用 `python`，`python3` 常是
+Microsoft Store 占位别名）。日常出提示词不跑任何脚本。

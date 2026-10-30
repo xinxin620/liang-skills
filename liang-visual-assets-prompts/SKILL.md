@@ -151,8 +151,8 @@ H3 视频提示词不归这里，音频与配音不归这里。下游只抄不�
     - 每个条目写完即自检：锁面逐字在正文里、文字政策与呈现方法不冲突、无占位符。
 11. **补下游缺口**。整集请求一次处理完整集，末端一次回报：关键身份决定、未决指代、
     参考图缺口、锁的生效范围，以及需要下游同步的文件。
-12. **跑自检**。`python3 scripts/check_assets.py 剧集/<EP>`，把报出的问题修到通过或
-    在报告里逐条说明为什么保留。
+12. **跑自检（一次）**。`python scripts/check_assets.py 剧集/<EP>`：按报错改一轮，
+    重跑一次确认；仍不过的写进报告逐条说明为什么保留，不再迭代。
 
 ## 连续性锁（给下游分镜/视频提示词留抓手）
 
@@ -235,10 +235,14 @@ H3 视频提示词不归这里，音频与配音不归这里。下游只抄不�
 ## 自检
 
 ```bash
-python3 scripts/check_assets.py 剧集/<EP>
-python3 scripts/check_assets.py 剧集/<EP> --partial   # 只有视觉设定时
-python3 scripts/selftest.py                          # 检查器自身
+python scripts/check_assets.py 剧集/<EP>
+python scripts/check_assets.py 剧集/<EP> --partial   # 只有视觉设定时
+python scripts/selftest.py                           # 只在安装/升级/排障时跑
 ```
+
+Windows 用 `python`，不要用 `python3`（常是 Microsoft Store 占位别名）；用系统已装的解释器，
+不要去找 ComfyUI 等软件自带的 python。检查器**只跑一次**，按报错改一轮后重跑确认即可，
+不要为验证检查器另造反例文件，也不要改 `scripts/check_assets.py` 去迁就成稿。
 
 检查器只机械核对：条目与 ID 结构、参考槽位语法与用途词表、锁语法与锁面是否真的出现在
 被点名的正文里、占位符与引擎语法残留、文字政策与呈现方法的显式冲突。
