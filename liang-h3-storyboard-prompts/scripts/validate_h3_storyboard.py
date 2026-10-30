@@ -163,6 +163,7 @@ def validate_dialogue_tags(prompt: str, unit: str) -> list[Issue]:
 
 
 def validate_shot_timestamps(prompt: str, unit: str) -> list[Issue]:
+    """At MM:SS.mmm 是可选写法：写就要严格递增，不写不算错。"""
     issues: list[Issue] = []
     shot_matches = list(re.finditer(r"\[Shot\s+(\d+)\]", prompt))
     timestamps: list[float] = []
@@ -172,9 +173,6 @@ def validate_shot_timestamps(prompt: str, unit: str) -> list[Issue]:
         end = shot_matches[index + 1].start() if index + 1 < len(shot_matches) else len(prompt)
         segment = prompt[start:end]
         timestamp = re.search(r"\bAt\s+(\d{2}):(\d{2})(?:\.(\d{1,3}))?", segment)
-        if shot_number >= 2 and timestamp is None:
-            issues.append(Issue(unit, f"[Shot {shot_number}] 后缺少 At MM:SS 时间戳"))
-            continue
         if timestamp is not None:
             minutes = int(timestamp.group(1))
             seconds = int(timestamp.group(2))
@@ -182,7 +180,7 @@ def validate_shot_timestamps(prompt: str, unit: str) -> list[Issue]:
             fraction_value = float(f"0.{fraction}")
             timestamps.append(minutes * 60 + seconds + fraction_value)
     if timestamps and timestamps != sorted(timestamps):
-        issues.append(Issue(unit, "切镜时间戳没有严格递增"))
+        issues.append(Issue(unit, "切镜时间戳没有严格递增（写了 At 就必须严格递增；也可全不写）"))
     return issues
 
 

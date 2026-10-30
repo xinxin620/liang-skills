@@ -29,13 +29,15 @@ subject_definitions:
 <Picture 4> is the previous shot's frame: the exact 【地点】, lighting, prop arrangement and character positions to continue from.
 【画外角色：整条删掉，不定义、不占编号、不写音色（不要说"本单元没有她的参考图，只按文字定义"）。】
 【本单元有人入画但不说话的：在对应 Subject 条目尾部声明 <Subject N> (SN) stays silent in this scene and does not speak at all.（音色一个字不写）】
-【多镜容器时，正文第一行（subject_definitions 之前）加对齐句：<Picture 1> aligns with the 0.00-second mark as the opening frame of [Shot 1]; <Picture 2> aligns with the 3.00-second mark as the frame of [Shot 2]; ...（各切点秒数与 [Shot N] 的 At 时间戳一致）】
+【多镜容器：容器内刀号从 [Shot 1] 起重新数；各刀默认不写 At 时间点，直接 [Shot 1] / [Shot 2] / [Shot 3] 顺序切镜，秒数只登记在单元元数据「镜头构成」；有逐切起始帧时才加对齐句 <Picture 1> aligns with the 0.00-second mark as the opening frame of [Shot 1]; ...】
+【容器切分：先按剧情断点分组（同一轮问答、同一动作因果链不拆；坐→站、防守→反攻、追问→被道破才是边界），再核容器累计 4–15 秒（超了切、不足并）。】
 【风格基调句放 [Shot 1] 之前（六段模式要求）：The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.】
 summary: [reference generation] 【一到三句本单元可见状态变化，不写抽象结论；前缀按实际任务类型选，如 keyframe completion / video continuation，多关系用 + 拼接】
 retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【脸型、服装层、比例、身高关系】; pose follows this unit. <Picture 3> (appears in [Shot 1]–[Shot N]): partially_preserved - 【布局与色光保留，道具摆位随本单元】. <Picture 4> (appears in [Shot 1]–[Shot N]): fully_preserved - 【A stays screen-LEFT, B stays screen-RIGHT; axis never crossed; arrangement never mirrored】.
 detailed_description: [Shot 1] 【景别】, <Subject 1> (S1) alone, sharp: 【情绪副词；可见身体小动作】. <Subject 1> (S1) says:
 <d>[Chinese]【逐字台词】</d>
-Mouth discipline: only 【角色】 moves her lips; no other character shares the frame. [Shot 2] At 00:03.500, 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
+Mouth discipline: only 【角色】 moves her lips; no other character shares the frame. [Shot 2] 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
+【容器第 1 刀若承接上一容器，末尾加：Continuity: this unit opens on the exact pose the previous unit ended on - 【上一容器结尾姿态 + 道具状态】; do not restage the opening, carry it over.】
 overall_soundscape: 【一到四句：环境声 + 物理音效 + 非语言人声，不重复对白】
 non_diegetic_music: N/A
 ```
