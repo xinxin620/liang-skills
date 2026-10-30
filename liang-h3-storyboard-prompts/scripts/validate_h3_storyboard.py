@@ -133,6 +133,36 @@ def validate_subject_picture_labels(prompt: str, unit: str) -> list[Issue]:
     return issues
 
 
+def validate_stray_tags(block: str, unit: str) -> list[Issue]:
+    """Tag lines must live inside the H3 prompt code block only.
+
+    A `<Subject N> is ...` / `<Picture N> ...` line sitting in the unit metadata
+    or in the file header gets copied around as stray prompt text and is the
+    classic cause of an English block polluted by a Chinese definition line.
+    """
+    issues: list[Issue] = []
+    # 中文对照 段落允许以块外行文（对照在块外或块内两种排法都合法），不参与本项扫描
+    cut = re.search(r"^###+\s*中文对照", block, re.MULTILINE)
+    scope = block[: cut.start()] if cut else block
+    in_fence = False
+    for line in scope.splitlines():
+        if line.strip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        if re.match(r"^\s*<(?:Subject|Picture)\s+\d+>", line):
+            issues.append(
+                Issue(
+                    unit,
+                    "标签行出现在代码块外（单元元数据或文件头）："
+                    + line.strip()[:40]
+                    + " —— 必须只写在英文 H3 块的 subject_definitions 里",
+                )
+            )
+    return issues
+
+
 def validate_speaker_mapping(prompt: str, voice_mapping: str | None, unit: str) -> list[Issue]:
     if not voice_mapping:
         return []
@@ -242,6 +272,7 @@ def validate_unit(unit: str, block: str) -> list[Issue]:
         if retention_text and not any(term in retention_text for term in RETENTION_TERMS):
             issues.append(Issue(unit, "retention_analysis 未写保留强度"))
 
+    issues.extend(validate_stray_tags(block, unit))
     issues.extend(validate_subject_picture_labels(prompt, unit))
     issues.extend(validate_speaker_mapping(prompt, values["声线映射"], unit))
     issues.extend(validate_dialogue_tags(prompt, unit))
@@ -262,6 +293,8 @@ def validate_file(path: Path) -> list[Issue]:
         return [Issue("FILE", "没有找到 H3-UNIT-* 二级标题")]
 
     issues: list[Issue] = []
+    header = text[: text.find("## H3-UNIT-")] if "## H3-UNIT-" in text else text
+    issues.extend(validate_stray_tags(header, "FILE"))
     for unit, block in units:
         issues.extend(validate_unit(unit, block))
     return issues

@@ -79,6 +79,12 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
   `<Subject 1> is the woman whose appearance comes from <Picture 1> and whose
   walking motion comes from <Video 1>.`
 - 不写"角色会做某动作"——动作属于 `detailed_description`。
+- **标签行只准住在这个代码块里。** `<Subject N> is …` / `<Subject N> 是 …` /
+  `<Picture N> …` 独立成行时，只能出现在 `### H3 提示词` 下的英文 ```text 块内。
+  文件头、单元元数据列表、分镜表、中文对照块都不许另起一行写标签定义
+  （行内引用合法：`- 主体映射：<Subject 1> = 母亲 = <Picture 1> = S1`）。
+  代码块外游离的标签行会被整段粘进错误位置，是"英文块里混进中文主体定义"的源头；
+  `validate_h3_storyboard.py` 直接报错。
 - 官方完整示例（独立成行、标签打头）：
 
 ```text
