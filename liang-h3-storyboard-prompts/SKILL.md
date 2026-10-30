@@ -94,7 +94,7 @@ first_last_frame）与人物设定图（定妆照 / 四视图）作为配套能�
 ```text
 subject_definitions:
 <Subject 1> is 【角色】 in <Picture 1>, with 【脸型骨相 + 五官 + 识别特征 + 服装各层】.
-<Picture 3> anchors the environment: 【布局、家具、光、色】.
+<Subject 2> is the 【餐厅/客厅/办公室】 environment in <Picture 2>, featuring 【布局、家具、光、色】.
 summary: [reference generation] 【一到三句可见状态变化】
 retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【保留什么】.
 detailed_description: [Shot 1] ... <Subject 1> (S1) says: <d>[Chinese]逐字台词</d> [Shot 2] At 00:03.500, ...
@@ -133,15 +133,19 @@ non_diegetic_music: N/A
 
 - 图归属由 `- 主体映射：` 写死：`<Subject 2> = 女儿 = <Picture 1> = S2` 表示
   `<Picture 1>` 是女儿的图，**只有女儿**能在定义行里写 `in <Picture 1>`。
-- 同一单元里另一个角色（画外、只作身份定义）**没有图**，定义行不许写 `in <Picture N>`，要写
-  `<Subject 1> is the … , defined by this description only (no reference picture for her in this
-  clip), with …`；中文写 `<Subject 1> 是…（本单元没有她的参考图，只按文字定义）：…`。
-  否则模型会把同一张脸安到两个人身上——母女变同一张脸，是本套件最常见的翻车。
+- **画外角色不定义**：本单元不入画、不发声的角色，整条不写 `<Subject N>`、不占编号、不写音色，
+  也不写任何兜底句（`defined by this description only` / `never borrow a face from <Picture 1>`
+  这类一律删掉）。模型只追踪画面里真实存在的主体，多定义一个人反而会把他画进画面或借走别人的脸。
 - `<Picture N>` 的角色行必须点名归属：`<Picture 1> defines the identity, face and costume of
   <Subject 2> only`，不写"这张图定义身份"这种无主句。
-- `<Picture N> anchors the environment` 只能给 `用途：地理` 的图；身份图不许当场景锚。
+- **环境也用 Subject 标记**（官方写法，模型认）：`<Subject 2> is the dining-room environment in
+  <Picture 2>, featuring …`；中文 `<Subject 2> 是 <Picture 2> 中的餐厅环境：…`。
+  不要写成孤立的 `<Picture 2> anchors the environment:` 行。只有 `用途：地理` 的图能当环境。
 - 因此"身份图是 `<Picture 1>`、环境图是 `<Picture 2>`"完全正常：不要为了编号好看把场景图排到 1，
   也不要因为"母亲是 Subject 1"就以为她是 `Picture 1`。
+- **每单元重编号（默认做法）**：`<Subject 1>` = `<Picture 1>` = 本单元入画的那个角色；
+  `<Subject 2>` = `<Picture 2>` = 环境。同一场里 A 单元女儿是 S1、B 单元母亲也是 S1 完全合法——
+  每个单元是独立 job，两套编号各自从 1 起。文件头不要写"主体编号跨单元固定"。
 
 站位图不决定人物身份。素材编号按同类素材**在本单元「输入参考图」里**的 `顺序` 递增：
 第 1 张图是 `<Picture 1>`，视频、音频各自从 1 数起（每个单元/job 各自从 1 起，

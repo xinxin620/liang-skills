@@ -10,8 +10,8 @@
 - 模式：reference
 - 来源：<真实剧本场景 ID>
 - 参考图：<REF/PLAN 槽位，逐项：顺序、路径或条目 ID、中文名称、用途、控制、不得控制；按顺序编号成 <Picture N>>
-- 主体映射：<Subject 1> = <角色> = <Picture N> = <Sx>
-- 声线映射：<角色> = <Subject N> = <Sx> = <固定音色 - now 本场状态>
+- 主体映射：<Subject 1> = <角色> = <Picture 1> = S1；<Subject 2> = 环境 = <Picture 2>；画外角色不入画，不占编号、不写音色
+- 声线映射：<Subject 1> = <角色> = S1 = <固定音色 - now 本场状态>
 - 空间锁：<屏幕左右、朝向、轴线、出入口、禁止镜像>
 - 口型纪律：<只有谁可以动嘴；其他人嘴部状态；无对白镜写双唇闭合>
 - 状态链：<起点> → <唯一主变化> → <可验证终点>
@@ -23,11 +23,12 @@
 ```text
 subject_definitions:
 <Subject 1> is 【角色名】 in <Picture 1>, with 【身份 + 脸型骨相 + 五官 + 识别特征 + 服装各层，逐字抄视觉设定】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image. <Subject 1> (S1) always uses one fixed voice: 【终身固定音色】 - now 【本场状态】. Do not change.
-<Subject 2> is 【角色名】 in <Picture 2>, with 【身份 + 脸型 + 服装各层】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image.
-<Picture 3> anchors the environment: 【场景 + 固定家具 + 光源方向 + 色调】. Preserve its layout, palette and lighting exactly.
-<Picture 4> is the locked blocking reference: keep the same screen arrangement - do not mirror it.
-<Picture 5> is the previous shot's frame: the exact 【地点】, lighting, prop arrangement and character positions to continue from.
-【不说话的成员：在对应 Subject 条目尾部声明 <Subject N> (SN) stays silent in this scene and does not speak at all.（音色一个字不写；无台词角色不写声音锁）】
+<Subject 2> is the 【餐厅/客厅/办公室】 environment in <Picture 2>, featuring 【场景 + 固定家具 + 光源方向 + 色调】. Preserve its layout, palette and lighting exactly.
+【每单元重编号：<Subject 1> = <Picture 1> = 本单元入画的那个角色；<Subject 2> = <Picture 2> = 环境；画外角色不定义、不占编号、不写音色】
+<Picture 3> is the locked blocking reference: keep the same screen arrangement - do not mirror it.
+<Picture 4> is the previous shot's frame: the exact 【地点】, lighting, prop arrangement and character positions to continue from.
+【画外角色：整条删掉，不定义、不占编号、不写音色（不要说"本单元没有她的参考图，只按文字定义"）。】
+【本单元有人入画但不说话的：在对应 Subject 条目尾部声明 <Subject N> (SN) stays silent in this scene and does not speak at all.（音色一个字不写）】
 【多镜容器时，正文第一行（subject_definitions 之前）加对齐句：<Picture 1> aligns with the 0.00-second mark as the opening frame of [Shot 1]; <Picture 2> aligns with the 3.00-second mark as the frame of [Shot 2]; ...（各切点秒数与 [Shot N] 的 At 时间戳一致）】
 【风格基调句放 [Shot 1] 之前（六段模式要求）：The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.】
 summary: [reference generation] 【一到三句本单元可见状态变化，不写抽象结论；前缀按实际任务类型选，如 keyframe completion / video continuation，多关系用 + 拼接】
@@ -44,7 +45,7 @@ non_diegetic_music: N/A
 ```text
 主体定义：
 <Subject 1> 是 <Picture 1> 中的【角色名】，【身份 + 脸型骨相 + 五官 + 识别特征 + 服装各层】。保持参考图中的五官、发型、服装、身材比例与整体形象。<Subject 1> (S1) 声音固定为【终身固定音色】——现在是【本场状态】，不变。
-<Picture 3> 锚定环境：【场景 + 固定家具 + 光源方向 + 色调】。严格保持其布局、色调与光效。
+<Subject 2> 是 <Picture 2> 中的【餐厅/客厅/办公室】环境：【场景 + 固定家具 + 光源方向 + 色调】。严格保持其布局、色调与光效。
 概要：参考生成。【一到三句可见状态变化】
 保留分析：<Subject 1>（出现于 [Shot 1]–[Shot N]）：完整保留——【脸型、服装层、比例、身高关系】；姿势随本单元。
 分镜正文：[Shot 1]【景别】，<Subject 1> (S1) 单人，实焦：【情绪 + 可见小动作】。<Subject 1> (S1) 说：

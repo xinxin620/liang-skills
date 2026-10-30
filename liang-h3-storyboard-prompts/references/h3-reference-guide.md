@@ -46,7 +46,7 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 | 类型 | 写法 | 锁住什么 |
 |---|---|---|
 | 角色图 | `<Picture N>` + `<Subject N>` 定义 | 脸、服装、身材、发式 |
-| 场景图 | `<Picture N> anchors the environment` | 布局、色调、光效 |
+| 场景图 | `<Subject N> is the … environment in <Picture N>, featuring …` | 布局、色调、光效 |
 | 站位帧 | `<Picture N> is the locked blocking reference` | 屏幕左右、机位侧、轴线 |
 | **成品帧** | `<Picture N> is the previous shot's frame` | 一图顶三图：场景＋站位＋道具＋光线＋动作接续点 |
 | 道具图 | 特写镜里引用，retention 里加"形状每镜一致" | 道具细节 |
@@ -58,11 +58,18 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 一并封掉道具被挪、光线换向、人物换位三种漂移。
 
 **一张图只属于一个主体。** 角色图挂成 `<Picture 1>` 后，只有 `- 主体映射：` 里对应它的那个
-`<Subject N>` 能写 `in <Picture 1>`。同单元里另一个角色若没有自己的图，写成
-`<Subject 2> is the …, defined by this description only (no reference picture for her in this clip), with …`，
-绝不能也写 `in <Picture 1>`——那会让两个人共用一张脸。无主句
-`<Picture 1> defines the identity …` 也要补成 `<Picture 1> defines the identity … of <Subject 1> only`。
-`<Picture N> anchors the environment` 只能给 `用途：地理` 的图。
+`<Subject N>` 能写 `in <Picture 1>`，绝不能两个人共用一个 `in <Picture 1>`——那会让两个人共用一张脸。
+
+**每单元重编号（默认做法）。** 每个单元是独立 job，两套编号各自从 1 起：
+
+- `<Subject 1>` = `<Picture 1>` = **本单元入画的那个角色**（定妆图）。
+- `<Subject 2>` = `<Picture 2>` = **环境**，写成
+  `<Subject 2> is the dining-room environment in <Picture 2>, featuring …`
+  （中文 `<Subject 2> 是 <Picture 2> 中的餐厅环境：…`）。官方示例就是
+  `<Subject 1> is the coffee-shop environment in <Picture 1>, featuring …`，环境本来就该用 Subject 标记。
+- **画外角色不定义**：本单元不入画、不发声的人，整条不写 `<Subject N>`、不占编号、不写音色，
+  也不写 `defined by this description only` / `never borrow a face from <Picture 1>` 这类兜底句。
+- 同一场里 A 单元女儿是 S1、B 单元母亲也是 S1，合法；文件头不要写"主体编号跨单元固定"。
 
 素材不足（只给了角色图）：`<Picture N>` 只留给真实上传的图，不要引用不存在的号——
 缺场景图用一行 `Environment: …` 文字锁死；缺站位帧用一行 `Locked blocking (do not mirror): …`
@@ -80,8 +87,9 @@ REF-STUDY-PLATE（顺序：3；用途：地理）    -> <Picture 3>
 - **图只用于定义某个 Subject 时，在定义行内引用（`in <Picture 2>`），不另起独立行**；
   只有图本身是"某个镜头的首帧/关键帧/尾帧/构图锚"才单独成行
   （`<Picture 1> is the opening composition of this shot` /
-  `anchors the environment` / `is the previous shot's frame` /
-  `is the locked blocking reference`）。
+  `is the previous shot's frame` / `is the locked blocking reference`）。
+  环境例外：场景图也写成 Subject 条目（`<Subject 2> is the … environment in <Picture 2>, featuring …`），
+  不要写孤立的 `<Picture 2> anchors the environment:` 行。
 - 同一主体来自多张素材时合并来源并写清各素材提供什么：
   `<Subject 1> is the woman whose appearance comes from <Picture 1> and whose
   walking motion comes from <Video 1>.`
