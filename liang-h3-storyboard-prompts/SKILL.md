@@ -238,6 +238,9 @@ non_diegetic_music: N/A
 修订时保留未受影响的 `H3-UNIT-...` 和 `SHOT-...` ID；拆分、合并或改参考图后，
 明确哪些下游 job 需要重新生成。
 
+**交付节奏（防拖慢）：** 读事实 → 弹确认卡停 → 一次写成稿 → 跑一次校验 → 交付。
+中途不要边写边跑脚本，不要为某个单元单独建测试稿，也不要顺手"优化"校验器。
+
 **校验只跑一次，不迭代。** 成稿写完跑一次 `python scripts/validate_h3_storyboard.py <成稿路径>`：
 
 - Windows 用 `python`，不要用 `python3`（`python3` 常是 Microsoft Store 占位别名，会报错或弹商店）。

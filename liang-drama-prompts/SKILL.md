@@ -110,6 +110,15 @@ python scripts/duration_estimate.py "剧集/EP001/剧本.md" --index "粘贴第�
 资产、分镜、审查与生产只有用户点名时开始。
 写完本阶段文档后，按需转下游技能：资产与设定走 `$liang-visual-assets-prompts`，图片提示词走 `$liang-image-prompts`，分镜走 `$liang-h3-storyboard-prompts`。是否开始由用户点名，本技能不自动串联。剧本内容质量始终由创作者审查；上游规划要改，交回用户的规划材料，本技能不新增第二份规划事实。
 
+## 运行纪律（防拖慢）
+
+- 脚本**只在用户问时长/需要核对 VO 占比时**跑一次，一次跑完三条命令就交付；
+  不要为调参反复重跑，不要为验证脚本另造样例剧本或测试文件。
+- 用系统已装的 `python`（本机 `D:\app\workApp\Python312\python.exe`）；
+  `python3` 常是 Microsoft Store 占位别名，不要去找 ComfyUI 或其他软件自带的 python。
+- 不要改 `scripts/*.py` 去迁就某一份剧本；脚本是尺子，不是交付物。
+- 交付前把临时索引、快照和测试稿清掉，只留正式产物。
+
 ## 安装维护
 
 脚本需要 Python 3.9 或更高版本，其余功能不依赖 Python。排障或升级时在本技能目录下运行 `python scripts/selftest.py`（只在这两种场合跑）。本机若没有可用的解释器（Windows 上 `python`/`python3` 可能只是 Microsoft Store 的占位别名，`py` 也可能不存在），先 `python --version` 确认能打印出版本号再执行；没有解释器时跳过全部脚本，时长按上文「时长估算」的手算口径并结合通读判断，不要为跑脚本而临时安装环境。

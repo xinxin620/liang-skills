@@ -2,7 +2,7 @@
 """check_assets.py 的回归自测：用内存里的样例文档断言该报的码报了、不该报的不报。
 
 只测检查器自己的判定，不测资产拆得对不对。新增错误码时在这里补一条用例。
-运行：``python3 scripts/selftest.py``
+运行：``python scripts/selftest.py``（Windows 用 `python`）
 """
 
 from __future__ import annotations
