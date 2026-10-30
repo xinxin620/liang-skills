@@ -2,6 +2,9 @@
 
 复制整段填占位。【】之外的固定句式不要改——它们是稳定出片的锚点。
 
+每个单元出**两个** ` ```text ` 块：上面是英文 H3 正文（整段复制投喂），
+下面是中文对照（整段复制给人看）。中文不要混进英文块。
+
 ## H3-UNIT-<EP>-<SEQ> · <单元名>
 - 时长：<4–15 整数> 秒
 - 模式：reference
@@ -34,6 +37,21 @@ detailed_description: [Shot 1] 【景别】, <Subject 1> (S1) alone, sharp: 【�
 Mouth discipline: only 【角色】 moves her lips; no other character shares the frame. [Shot 2] At 00:03.500, 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
 overall_soundscape: 【一到四句：环境声 + 物理音效 + 非语言人声，不重复对白】
 non_diegetic_music: N/A
+```
+
+### 中文对照
+
+```text
+主体定义：
+<Subject 1> 是 <Picture 1> 中的【角色名】，【身份 + 脸型骨相 + 五官 + 识别特征 + 服装各层】。保持参考图中的五官、发型、服装、身材比例与整体形象。<Subject 1> (S1) 声音固定为【终身固定音色】——现在是【本场状态】，不变。
+<Picture 3> 锚定环境：【场景 + 固定家具 + 光源方向 + 色调】。严格保持其布局、色调与光效。
+概要：参考生成。【一到三句可见状态变化】
+保留分析：<Subject 1>（出现于 [Shot 1]–[Shot N]）：完整保留——【脸型、服装层、比例、身高关系】；姿势随本单元。
+分镜正文：[Shot 1]【景别】，<Subject 1> (S1) 单人，实焦：【情绪 + 可见小动作】。<Subject 1> (S1) 说：
+<d>[Chinese]【逐字台词】</d>
+嘴型纪律：只有【角色】动唇，本镜无他人入画。
+环境声底：【环境声 + 物理音效 + 非语言人声】
+非画内配乐：无
 ```
 
 ## 填空提示
