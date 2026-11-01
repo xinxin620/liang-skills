@@ -184,6 +184,32 @@ def validate_shot_timestamps(prompt: str, unit: str) -> list[Issue]:
     return issues
 
 
+def validate_shot_paragraphs(prompt: str, unit: str) -> list[Issue]:
+    """Each shot tag in detailed_description must start its own paragraph."""
+    issues: list[Issue] = []
+    match = re.search(
+        r"^detailed_description\s*:\s*(.*?)(?=^(?:overall_soundscape|non_diegetic_music)\s*:)",
+        prompt,
+        re.MULTILINE | re.DOTALL,
+    )
+    if match is None:
+        return issues
+    description = match.group(1)
+    tags = list(re.finditer(r"\[Shot\s+(\d+)\]", description))
+    for tag in tags:
+        paragraph_start = description.rfind("\n\n", 0, tag.start()) + 2
+        prefix = description[paragraph_start:tag.start()]
+        line_prefix = description[description.rfind("\n", 0, tag.start()) + 1:tag.start()]
+        if prefix.strip() or line_prefix.strip():
+            issues.append(
+                Issue(
+                    unit,
+                    f"[Shot {tag.group(1)}] 未独立成段或未放在段首；中文分镜正文须同步分段",
+                )
+            )
+    return issues
+
+
 def has_chinese_contrast(block: str) -> bool:
     """Bilingual delivery rule: a 中文对照 section must live AFTER the prompt."""
     contrast = re.search(r"^###+\s*中文对照", block, re.MULTILINE)
@@ -244,6 +270,8 @@ def validate_unit(unit: str, block: str) -> list[Issue]:
     issues.extend(validate_speaker_mapping(prompt, values["声线映射"], unit))
     issues.extend(validate_dialogue_tags(prompt, unit))
     issues.extend(validate_shot_timestamps(prompt, unit))
+    if mode == "reference":
+        issues.extend(validate_shot_paragraphs(prompt, unit))
 
     if description_key not in prompt:
         issues.append(Issue(unit, f"H3 正文缺少字段：{description_key}"))

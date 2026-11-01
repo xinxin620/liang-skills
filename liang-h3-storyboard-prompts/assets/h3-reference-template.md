@@ -34,9 +34,13 @@ subject_definitions:
 【风格基调句放 [Shot 1] 之前（六段模式要求）：The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.】
 summary: [reference generation] 【一到三句本单元可见状态变化，不写抽象结论；前缀按实际任务类型选，如 keyframe completion / video continuation，多关系用 + 拼接】
 retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【脸型、服装层、比例、身高关系】; pose follows this unit. <Picture 3> (appears in [Shot 1]–[Shot N]): partially_preserved - 【布局与色光保留，道具摆位随本单元】. <Picture 4> (appears in [Shot 1]–[Shot N]): fully_preserved - 【A stays screen-LEFT, B stays screen-RIGHT; axis never crossed; arrangement never mirrored】.
-detailed_description: [Shot 1] 【景别】, <Subject 1> (S1) alone, sharp: 【情绪副词；可见身体小动作】. <Subject 1> (S1) says:
+detailed_description: The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.
+
+[Shot 1] 【景别】, <Subject 1> (S1) alone, sharp: 【情绪副词；可见身体小动作】. <Subject 1> (S1) says:
 <d>[Chinese]【逐字台词】</d>
-Mouth discipline: only 【角色】 moves her lips; no other character shares the frame. [Shot 2] 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
+Mouth discipline: only 【角色】 moves her lips; no other character shares the frame.
+
+[Shot 2] 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
 【容器第 1 刀若承接上一容器，末尾加：Continuity: this unit opens on the exact pose the previous unit ended on - 【上一容器结尾姿态 + 道具状态】; do not restage the opening, carry it over.】
 overall_soundscape: 【一到四句：环境声 + 物理音效 + 非语言人声，不重复对白】
 non_diegetic_music: N/A
@@ -50,9 +54,13 @@ non_diegetic_music: N/A
 <Subject 2> 是 <Picture 2> 中的【餐厅/客厅/办公室】环境：【场景 + 固定家具 + 光源方向 + 色调】。严格保持其布局、色调与光效。
 概要：参考生成。【一到三句可见状态变化】
 保留分析：<Subject 1>（出现于 [Shot 1]–[Shot N]）：完整保留——【脸型、服装层、比例、身高关系】；姿势随本单元。
-分镜正文：[Shot 1]【景别】，<Subject 1> (S1) 单人，实焦：【情绪 + 可见小动作】。<Subject 1> (S1) 说：
+分镜正文：全片采用【风格 + 色调 + 光质】。
+
+[Shot 1]【景别】，<Subject 1> (S1) 单人，实焦：【情绪 + 可见小动作】。<Subject 1> (S1) 说：
 <d>[Chinese]【逐字台词】</d>
 嘴型纪律：只有【角色】动唇，本镜无他人入画。
+
+[Shot 2]【景别】：【动作 + 物理结果】。无台词，双唇闭合。
 环境声底：【环境声 + 物理音效 + 非语言人声】
 非画内配乐：无
 ```
@@ -80,6 +88,8 @@ non_diegetic_music: N/A
 - **不可能动作三拍**：前一态 → 无脸闪光帧 → 硬切后一态 + 余韵；位移后保持原屏幕侧。
 - **时长**：4–15 整数秒；对白按约 4.1 可发声字/秒 估容量，放不下拆镜。
 - **参考图上限**：9 张 reference_image + 1 起始帧 + 1 尾帧 + 3 段参考视频 + 3 段参考音频（各 2–15 秒、合计 ≤15 秒）。
+- **镜头分段（强制）**：每个 `[Shot N]` 在英文 `detailed_description` 和中文 `分镜正文` 都独立成段、放在段首；
+  风格基调单列在 `[Shot 1]` 前面。不得把下一刀粘在上一声台词、嘴型纪律或继镜说明后面；中文分镜表一镜一行。
 
 ## 逐段中文对照（强制，紧跟英文代码块之后，放代码块外面）
 
