@@ -153,12 +153,13 @@ def validate_dialogue_tags(prompt: str, unit: str) -> list[Issue]:
     if opening_count != closing_count:
         issues.append(Issue(unit, "<d> 与 </d> 数量不一致"))
 
-    matches = re.findall(r"<d>\[Chinese\](.*?)</d>", prompt, re.DOTALL)
+    # 语言标签跟随台词实际语言：[Chinese] / [Cantonese] / [English] …（官方格式 <d>[语言]逐字台词</d>）
+    matches = re.findall(r"<d>\[[A-Za-z]+\](.*?)</d>", prompt, re.DOTALL)
     if len(matches) != closing_count:
-        issues.append(Issue(unit, "台词必须使用 <d>[Chinese]逐字台词</d>"))
+        issues.append(Issue(unit, "台词必须使用 <d>[语言]逐字台词</d>（如 [Chinese]、[Cantonese]、[English]）"))
     for dialogue in matches:
         if not dialogue.strip():
-            issues.append(Issue(unit, "存在空的中文对白标签"))
+            issues.append(Issue(unit, "存在空的台词标签"))
     return issues
 
 

@@ -29,6 +29,23 @@
 | 硬切 | hard cut |
 | 同一机位不跳轴 | stays on the same side of the axis |
 
+## 文戏机位角度与高度（压迫感/审判感/收束用）
+
+文戏要"镜头有态度"时从这里取词；武戏的极端运动镜头词表在 [mode-action.md](mode-action.md)。
+
+| 中文 | 英文 | 用来干什么 |
+|---|---|---|
+| 侧拍（人物同高侧面机位） | Static side-on shot | 对峙的基本盘，两人关系一帧说清 |
+| 略低于桌线的仰拍，呈现压迫/分量 | from a slightly low angle at about her waist height, tilting upward | 站立者压过坐者、权力翻转 |
+| 正面齐胸平拍 | Static frontal medium shot at chest height, camera square on …'s face | 表态、宣判式台词 |
+| 反应镜（视线高度平拍） | Static reaction shot at her eye level | 听者变化，不给倾向 |
+| 约 45 度高角度俯拍大全，收全地面关系 | Static high-angle wide shot from high above, looking down at roughly forty-five degrees | 收束、孤立中心人物、看清站位 |
+| 过肩反打（同侧轴内） | Over-the-shoulder from behind …'s soft out-of-focus shoulder | 对话主覆盖，听者虚前景 |
+| 干净单人镜（同侧轴） | Clean single on …, from the same side of the axis | 每句台词的落地镜 |
+| 特写接住动作起点 | Open on the exact frame of <Picture N> / close-up at the open door | 承接式硬切的第一刀 |
+| 全场静锁组（每镜都不动） | The camera stays completely still in every shot: no push-in, no pull-back, no zoom, no handheld drift, no orbit | 要"定格审判感"整段锁死时（与武戏镜头纪律相反，一段只选一种） |
+| 摇臂式缓慢后拉升起（真实起重机感，非无人机漂浮） | pulls back and rises in one heavy, continuous crane move / the pull-back must feel slow and heavy, like a real crane arm | 由人带出环境、收尾留白 |
+
 ## 常见动作（动词 + 物理结果）
 
 | 中文 | 英文 |
