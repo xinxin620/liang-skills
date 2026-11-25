@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""机械校验《视觉设定.md》与《资产生图提示词.md》的结构一致性。
+"""机械校验《视觉设定.md》与《图片提示词.md》的结构一致性。
 
 只核对能被字符串证明的东西：ID 结构、锁语法、锁面是否逐字出现在被点名的
 提示词正文里、参考槽位语法与用途词表、文字政策两层的显式冲突、占位符与
@@ -21,8 +21,8 @@ if sys.version_info < MINIMUM_PYTHON:
     raise SystemExit("check_assets.py requires Python 3.9 or newer")
 
 VISUAL_DOC = "视觉设定.md"
-PROMPT_DOC = "资产生图提示词.md"
-LEGACY_PROMPT_DOC = "图片提示词.md"
+PROMPT_DOC = "图片提示词.md"
+LEGACY_PROMPT_DOC = "资产生图提示词.md"  # 历史项目旧名，沿用不新建
 
 ASSET_PREFIXES = ("CHAR", "LOOK", "LOC", "VIEW", "PROP", "PSTATE", "CREA")
 REQUIRED_FIELDS = ("资产", "用途", "视图", "文字政策", "参考")
@@ -646,7 +646,7 @@ def resolve_inputs(target: Path) -> tuple:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
-        description="机械校验视觉设定与资产生图提示词的结构一致性"
+        description="机械校验视觉设定与图片提示词的结构一致性"
     )
     parser.add_argument("target", help="剧集目录，或其中任一份文件")
     parser.add_argument(

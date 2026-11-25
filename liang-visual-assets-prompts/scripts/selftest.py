@@ -29,7 +29,7 @@ GOOD_VISUAL = """\
 """
 
 GOOD_PROMPT = """\
-# EP001 资产生图提示词
+# EP001 图片提示词
 
 ## IMG-LOOK-JIANGCHEN-DRESS · 江晨常服三视图
 - 资产：LOOK-JIANGCHEN-DRESS

@@ -2,8 +2,10 @@
 
 ## 这张表解决什么
 
-上游 `short-drama-assets` 用 `AST-*` / `CON-*` 编号陈述资产规则。本技能保留这些编号，是为了让
-一条本地做法能追回它的上游依据，而不是把上游文档抄一遍。本表做三件事：
+上游 `short-drama-assets` 用 `AST-*` / `CON-*` 编号陈述资产规则，图片提示词阶段用 `IMG-*`
+编号陈述提示词条目规则（原 `liang-image-prompts` 技能并入后，两套编号在这张表里合账）。
+本技能保留这些编号，是为了让一条本地做法能追回它的上游依据，而不是把上游文档抄一遍。
+本表做三件事：
 
 1. **查落点**：某个编号在本技能哪份文件、哪一节真正落地；
 2. **查覆盖**：这条规则有没有被 `scripts/check_assets.py` 机械核对，还是只能人工判断；
@@ -22,7 +24,7 @@
 | `AST-02` | reviewed | 每个出项归为 reuse／新身份／新变体／unresolved，不猜含混名或代词 | [身份与变体](identity-vs-variant.md#三个问题)、[称谓、代词与匿名对象](documents-and-extraction.md#称谓、代词与匿名对象) | 部分：`IM-03` |
 | `AST-03` | craft | 分离 Character／Look、Location／View、Prop／State | 三份设计文档的「分工」节：[人物](character-and-look.md#分工)、[地点](location-and-view.md#分工)、[道具](prop-and-state.md#状态：此刻怎样) | 否 |
 | `AST-04` | reviewed | 持久识别锚点与可变状态不混写 | [Character 最小识别集](character-and-look.md#character：最小稳定识别集)、[Location 边界](location-and-view.md#location-边界)、[状态：此刻怎样](prop-and-state.md#状态：此刻怎样) | 否 |
-| `AST-05` | structural | 每个下游引用解析到 `视觉设定.md` 的可见身份条目与当前变体 | [下游引用核对](asset-review-checklist.md#下游引用核对（ast-05）)、[交接：ID 与引用](documents-and-extraction.md#交接：id-与引用) | 部分：`ID-02`、`IM-01`、`IM-02` |
+| `AST-05` | structural | 每个下游引用解析到 `视觉设定.md` 的可见身份条目与当前变体 | [下游引用核对](asset-review-checklist.md#下游引用核对ast-05)、[交接：ID 与引用](documents-and-extraction.md#交接：id-与引用) | 部分：`ID-02`、`IM-01`、`IM-02` |
 | `AST-06` | craft | 只跟踪识别、复用、提示词、连续性所需事实 | [出项不等于视觉资产](documents-and-extraction.md#出项不等于视觉资产) | 否 |
 | `AST-07` | reviewed | 持久声音身份与场景级呼吸／情绪／音量／表达分离 | [可选声音方向](character-and-look.md#可选声音方向：身份锚点不等于本场-delivery) | 否 |
 | `AST-08` | reviewed | 声音参考绑定说明控制什么、不得控制什么 | 同上 | 否 |
@@ -31,18 +33,47 @@
 | `AST-11` | reviewed | 同批设计的角色不绑易混参考，各自命名可听区分特征 | [可选声音方向](character-and-look.md#可选声音方向：身份锚点不等于本场-delivery) | 否 |
 | `AST-12` | craft | 选角标准少而可听，并有反例 | 同上 | 否 |
 | `AST-13` | structural | 提示词语言与条目标题语言不同时，每个被引用人物条目给出 `画面代称` 的精确拼写或 `画面代称：无` | [画面代称要覆盖每一种正文语言](character-and-look.md#画面代称要覆盖每一种正文语言) | 否 |
-| `AST-14` | reviewed | 时代不与原著事实矛盾；旧／老式／复古一类词有原著依据或创作者选择 | [时代锚点](documents-and-extraction.md#时代锚点)、[语义审查](asset-review-checklist.md#b-语义审查（reviewed_invariant）) | 否 |
-| `AST-15` | craft | 项目视觉方向写明确时代锚点；地点／造型／道具条目承载时代形制 | 同上、[Craft 默认](asset-review-checklist.md#c-craft-默认（可覆盖，不单独阻断）) | 否 |
-| `CON-01` | structural | 相连的结束与进入状态一致，或有负责人显式修订 | [连续性变化记录](documents-and-extraction.md#连续性变化记录)、[机械检查](asset-review-checklist.md#a-机械检查（structural_invariant）) | 否 |
+| `AST-14` | reviewed | 时代不与原著事实矛盾；旧／老式／复古一类词有原著依据或创作者选择 | [时代锚点](documents-and-extraction.md#时代锚点)、[语义审查](asset-review-checklist.md#b-语义审查reviewed_invariant) | 否 |
+| `AST-15` | craft | 项目视觉方向写明确时代锚点；地点／造型／道具条目承载时代形制 | 同上、[Craft 默认](asset-review-checklist.md#c-craft-默认可覆盖不单独阻断) | 否 |
+| `CON-01` | structural | 相连的结束与进入状态一致，或有负责人显式修订 | [连续性变化记录](documents-and-extraction.md#连续性变化记录)、[机械检查](asset-review-checklist.md#a-机械检查structural_invariant) | 否 |
 | `CON-02` | reviewed | 知识／伤势／所有权／天气／光线／物理状态不得无剧情原因瞬移或倒退 | [连续性变化记录](documents-and-extraction.md#连续性变化记录) | 否 |
 | `CON-03` | craft | 只跟踪下游相关变化，不是每镜整本设定集 | 同上 | 否 |
 | `CON-04` | structural | 每条变化写明前态、后态、原因／来源场、有效范围、受影响可见 ID | 同上 | 否 |
-| `CON-05` | taste | 已声明的蒙太奇／省略／梦境／主观可有意打破常规连续性 | [Taste 选项](asset-review-checklist.md#d-taste-选项（只确认选择）) | 否 |
+| `CON-05` | taste | 已声明的蒙太奇／省略／梦境／主观可有意打破常规连续性 | [Taste 选项](asset-review-checklist.md#d-taste-选项只确认选择) | 否 |
 | `CON-06` | structural | 每条变化点名它影响的每个已存在下游文档；未来工作只描述不预建 | [连续性变化记录](documents-and-extraction.md#连续性变化记录) | 否 |
 | `CON-07` | structural | 声明的连续性锁固定一条逐字锁面及其镜头与图像范围；范围内每个冻结关键帧、运动提示词与具名图像提示词原样携带 | [跨镜一致性锁](continuity-lock.md) 全文 | 部分：`LK-01`…`LK-06` 只核对本技能一侧 |
 
 「部分」指检查器只覆盖该规则在本技能拥有的两份文件里的那一段，文档外的语义判断仍归人。`CON-07`
 的下游一侧（分镜的冻结关键帧、视频提示词的 `MOTION-...`）不在本技能产出，也不在这里被核。
+
+## A2. 图片提示词规则（IMG-01~15）
+
+原 `liang-image-prompts` 阶段契约并入后，`IMG-01~15` 在此合账（下表为中文主旨，判定依据是
+各落点文件正文），管辖《图片提示词.md》里的 `IMG-...` 条目。
+判定依据始终是本地正文：配方见 [提示词配方](prompt-recipe.md)，板型写法见各类型文件（人物／地点／道具／
+变体／lookdev／edit，见 SKILL 按需知识表）。分级沿用 `structural` 阻断、`reviewed` 需证据、`craft` 可覆盖。
+
+| ID | 分级 | 一句话主旨 | 机械核对 |
+|---|---|---|---|
+| `IMG-01` | structural | 每个 `IMG-` 条目点名其描绘的确切视觉设定条目与当前变体 | 部分：`IM-01`、`IM-02` |
+| `IMG-02` | craft | 区分性身份／几何／尺度／状态放在泛化质量语言之前 | 否（校验器不因固定词表阻断交付） |
+| `IMG-03` | reviewed | 人物板保持同一身份且只呈现一套自洽 Look | 否 |
+| `IMG-04` | reviewed | 地点板保持地理、朝向、锚点、材质与光线，通常不带角色 | 否 |
+| `IMG-05` | reviewed | 道具板保持尺度、形状、材质、磨损、功能与文字政策 | 否 |
+| `IMG-06` | structural | edit 提示词声明确切目标、变化、保持集与预期连续性影响 | 否 |
+| `IMG-07` | structural | 可读文字不能与全局禁字共存 | 是：`TXT-03` |
+| `IMG-08` | reviewed | 对参考像素的断言需创作者／权利人描述或授权观察，否则准入保持未决 | 部分：`REF-01` 语法侧 |
+| `IMG-09` | reviewed | 每张参考声明用途、可控制与不得控制；构图／尺度／效果参考不得重定义身份、内容、文字或故事状态 | 部分：`REF-02`、`REF-03` |
+| `IMG-10` | reviewed | 同一 Location 同一 time/weather state 的各 View 共享主光来源、色温关系与光比方向；差异须引成因与 delta | 否 |
+| `IMG-11` | reviewed | lookdev 帧绑定已接受视觉方向与制作 profile，按声明的测试轴展开；风格参考只控制声明的表面处理 | 否 |
+| `IMG-12` | reviewed | 每个真实输入参考有稳定 `REF-` 槽位（顺序、项目相对路径、中文名、控制范围）；重排保持槽位身份，换图显式修订；`IMG-` 仅留给提示词条目标题 | 部分：`REF-01`、`REF-04` |
+| `IMG-13` | structural | 被《视觉设定.md》连续性锁点名的条目，把锁面逐字带进可复制正文 | 是：`LK-03`、`LK-04` |
+| `IMG-14` | structural | 每个 `REF-` 槽位带一个封闭词表用途（身份／造型状态／地理／构图／尺度／效果／起始帧／结束帧／风格），一图一问；资产板不用起始帧／结束帧 | 是：`REF-02`、`REF-03` |
+| `IMG-15` | craft | 细节密度匹配复用职责；多视图身份层只写一遍；渲染校准句至多一次且在具体材质事实之后（见 [细节密度](detail-density.md)） | 否 |
+
+`IMG-*` 与上文 `AST-*`/`CON-*` 分属两层：前者管《图片提示词.md》的条目怎么写，后者管
+《视觉设定.md》的事实怎么定。一条提示词同时受两侧约束时（如 `IMG-13` 依赖 `CON-07` 的锁），
+以锁与事实为上游，条目正文为下游，冲突回上游修，不在下游打补丁。
 
 ## B. 错误码 → 该去改什么
 
@@ -59,7 +90,7 @@
 | `IM-04` | 没有以 `>` 开头的可复制正文 | `CON-07` 前置 | 正文必须是一段可直接复制的文字，不是列表或说明 |
 | `IM-05` | 正文含引擎专用语法（`--ar`、`(x:1.2)`、`cat::2`） | 本地禁令 | 删掉，交给平台适配器 |
 | `IM-06` | 正文含占位符 | 本地禁令 | 填实或删句 |
-| `IM-07` | 正文混入内部字段或路径 | 本地禁令 | 只留画面语言，去掉 ID 之外的流程残留 |
+| `IM-07` | 正文混入内部字段或路径 | 本地禁令 | 只留画面语言，去掉 ID 之外的流程残留。**`REF-` 槽位是例外**：正文引用参考图槽位是合法写法（IMG-12/14 鼓励点名控制范围），不报 IM-07；`IMG-`/`LOCK-`/`SHOT-`/`MOTION-` 出现在正文才报 |
 | `LK-01` | 锁语法不完整；《中文名》不含中文；缺 `锁面：` | `CON-07` | 照 [语法](continuity-lock.md#语法) 补全整行 |
 | `LK-02` | 锁 ID 重复声明 | `CON-07` | 一个实体一把锁，改 ID 或合并 |
 | `LK-03` | 点名的 `IMG-` 无可复制正文，或锁面未逐字出现在正文里 | `CON-07` | 把锁面原样抄进正文；改写锁面的地方改回来 |
@@ -80,7 +111,7 @@
 
 | 编号 | 分级 | 说什么 | 落点 | 机械核对 |
 |---|---|---|---|---|
-| `DTL-01` | craft | 锚点密度按复用职责三选一（骨架/标准/定妆）；定妆级按 L1~L7 逐层写全；多视图里身份层只写一遍；渲染校准句只在尾部出现一次且在具体材质细节之后 | [细节密度](detail-density.md) | 否 |
+| `DTL-01` | craft | 锚点密度按复用职责三选一（骨架/标准/定妆）；《视觉设定.md》条目按 L1~L7 分层、《图片提示词.md》正文按 L0~L11 描述栈分层（两套编号映射见细节密度文件）；定妆级逐层写全；多视图里身份层只写一遍；渲染校准句只在尾部出现一次且在具体材质细节之后 | [细节密度](detail-density.md) | 否 |
 
 `DTL-01` 是可覆盖的常用做法：创作者可以按平台实测结果加严或放宽，只需在交付说明里写明选择。
 
