@@ -118,12 +118,21 @@ first_last_frame）与人物设定图（定妆照 / 四视图）作为配套能�
 
 ```text
 subject_definitions:
+
 <Subject 1> is 【角色】 in <Picture 1>, with 【脸型骨相 + 五官 + 识别特征 + 服装各层】.
+
 <Subject 2> is the 【餐厅/客厅/办公室】 environment in <Picture 2>, featuring 【布局、家具、光、色】.
+
 summary: [reference generation] 【一到三句可见状态变化】
+
 retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【保留什么】.
-detailed_description: [Shot 1] ... <Subject 1> (S1) says: <d>[Chinese]逐字台词</d> [Shot 2] At 00:03.500, ...
+
+detailed_description: [Shot 1] ... <Subject 1> (S1) says: <d>[Chinese]逐字台词</d>
+
+[Shot 2] At 00:03.500, ...
+
 overall_soundscape: ...
+
 non_diegetic_music: N/A
 ```
 
@@ -208,6 +217,9 @@ non_diegetic_music: N/A
 - **镜头分段排版（强制）**：`[Shot N]` 必须独立成段，放在每个镜头描述段落的开头（标签后直接写该刀内容），
   中文块的 `分镜正文` 和中文分镜表也必须每镜另起一段。不得把下一刀粘在上一刀的句尾或半句话之后；
   不得把 `[Shot 2]` 放在 `Mouth discipline`、台词、继镜说明等句子的中间。风格基调单列在 `[Shot 1]` 之前。
+- **段间空行（强制，中英文块同规）**：字段行（`subject_definitions:` / `summary:` …）、每条
+  `<Subject N>` / `<Picture N>` 定义行、每个 `[Shot N]` 段之间**一律空一行**——整块提示词按段
+  呼吸，投喂前肉眼可核段落边界，H3 按行首字段名认段、空行不伤解析。
 - `overall_soundscape`：只汇总环境声、物理音效、非语言人声；不重复对白。
 - `non_diegetic_music`：无非画内配乐写 `N/A`，不留空让模型补乐。
 - 把"无字幕、无水印、禁换位、禁手脸融合"等约束**折进对应段落**，不另开 H3 不认识的
@@ -287,6 +299,7 @@ non_diegetic_music: N/A
 - [ ] 容器切分同时过两道：剧情断点没被劈开（同一因果链在一组内），容器累计 4–15 秒
 - [ ] 多镜容器内刀号从 `[Shot 1]` 起重新数，全局镜号写在小标题里对应
 - [ ] 每个 `[Shot N]` 均独立成段、位于段首；英文与中文块均无嵌在句中的镜号；每刀在中文分镜表单独一行
+- [ ] 两个代码块内字段行、每条标签定义行、各 `[Shot N]` 段之间均有空行（中英文块同规）
 - [ ] 正文各刀没写 `At` 时间点（或写了且严格递增），秒数只在「镜头构成」与分镜表里
 - [ ] 不可能动作走三拍结构；位移后保持原屏幕侧
 - [ ] 无 BGM 时 `non_diegetic_music: N/A`；有 BGM 时写清切断点

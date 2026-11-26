@@ -22,18 +22,25 @@
 
 ```text
 subject_definitions:
+
 <Subject 1> is 【角色名】 in <Picture 1>, with 【身份 + 脸型骨相 + 五官 + 识别特征 + 服装各层，逐字抄视觉设定】. Preserve the facial features, hairstyle, costume, body proportions, and overall appearance from the reference image. <Subject 1> (S1) always uses one fixed voice: 【终身固定音色】 - now 【本场状态】. Do not change.
+
 <Subject 2> is the 【餐厅/客厅/办公室】 environment in <Picture 2>, featuring 【场景 + 固定家具 + 光源方向 + 色调】. Preserve its layout, palette and lighting exactly.
 【每单元重编号：<Subject 1> = <Picture 1> = 本单元入画的那个角色；<Subject 2> = <Picture 2> = 环境；画外角色不定义、不占编号、不写音色】
+
 <Picture 3> is the locked blocking reference: keep the same screen arrangement - do not mirror it.
+
 <Picture 4> is the previous shot's frame: the exact 【地点】, lighting, prop arrangement and character positions to continue from.
 【画外角色：整条删掉，不定义、不占编号、不写音色（不要说"本单元没有她的参考图，只按文字定义"）。】
 【本单元有人入画但不说话的：在对应 Subject 条目尾部声明 <Subject N> (SN) stays silent in this scene and does not speak at all.（音色一个字不写）】
 【多镜容器：容器内刀号从 [Shot 1] 起重新数；各刀默认不写 At 时间点，直接 [Shot 1] / [Shot 2] / [Shot 3] 顺序切镜，秒数只登记在单元元数据「镜头构成」；有逐切起始帧时才加对齐句 <Picture 1> aligns with the 0.00-second mark as the opening frame of [Shot 1]; ...】
 【容器切分：先按剧情断点分组（同一轮问答、同一动作因果链不拆；坐→站、防守→反攻、追问→被道破才是边界），再核容器累计 4–15 秒（超了切、不足并）。】
 【风格基调句放 [Shot 1] 之前（六段模式要求）：The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.】
+
 summary: [reference generation] 【一到三句本单元可见状态变化，不写抽象结论；前缀按实际任务类型选，如 keyframe completion / video continuation，多关系用 + 拼接】
+
 retention_analysis: <Subject 1> (appears in [Shot 1]–[Shot N]): fully_preserved - 【脸型、服装层、比例、身高关系】; pose follows this unit. <Picture 3> (appears in [Shot 1]–[Shot N]): partially_preserved - 【布局与色光保留，道具摆位随本单元】. <Picture 4> (appears in [Shot 1]–[Shot N]): fully_preserved - 【A stays screen-LEFT, B stays screen-RIGHT; axis never crossed; arrangement never mirrored】.
+
 detailed_description: The target video uses a cinematic live-action style with 【色调 + 光质 + 质感】.
 
 [Shot 1] 【景别】, <Subject 1> (S1) alone, sharp: 【情绪副词；可见身体小动作】. <Subject 1> (S1) says:
@@ -42,7 +49,9 @@ Mouth discipline: only 【角色】 moves her lips; no other character shares th
 
 [Shot 2] 【景别】: 【动作 + 物理结果】. No dialogue; both mouths stay closed.
 【容器第 1 刀若承接上一容器，末尾加：Continuity: this unit opens on the exact pose the previous unit ended on - 【上一容器结尾姿态 + 道具状态】; do not restage the opening, carry it over.】
+
 overall_soundscape: 【一到四句：环境声 + 物理音效 + 非语言人声，不重复对白】
+
 non_diegetic_music: N/A
 ```
 
@@ -50,10 +59,15 @@ non_diegetic_music: N/A
 
 ```text
 主体定义：
+
 <Subject 1> 是 <Picture 1> 中的【角色名】，【身份 + 脸型骨相 + 五官 + 识别特征 + 服装各层】。保持参考图中的五官、发型、服装、身材比例与整体形象。<Subject 1> (S1) 声音固定为【终身固定音色】——现在是【本场状态】，不变。
+
 <Subject 2> 是 <Picture 2> 中的【餐厅/客厅/办公室】环境：【场景 + 固定家具 + 光源方向 + 色调】。严格保持其布局、色调与光效。
+
 概要：参考生成。【一到三句可见状态变化】
+
 保留分析：<Subject 1>（出现于 [Shot 1]–[Shot N]）：完整保留——【脸型、服装层、比例、身高关系】；姿势随本单元。
+
 分镜正文：全片采用【风格 + 色调 + 光质】。
 
 [Shot 1]【景别】，<Subject 1> (S1) 单人，实焦：【情绪 + 可见小动作】。<Subject 1> (S1) 说：
@@ -62,7 +76,9 @@ non_diegetic_music: N/A
 嘴型纪律：只有【角色】动唇，本镜无他人入画。
 
 [Shot 2]【景别】：【动作 + 物理结果】。无台词，双唇闭合。
+
 环境声底：【环境声 + 物理音效 + 非语言人声】
+
 非画内配乐：无
 ```
 
@@ -70,6 +86,8 @@ non_diegetic_music: N/A
 
 - **结构顺序固定**：`subject_definitions → summary → retention_analysis → detailed_description → overall_soundscape → non_diegetic_music`，六段同一条正文一次提交；
   多镜容器的对齐句写在 `subject_definitions` 之前（正文第一行），风格基调句写在 `[Shot 1]` 之前。
+- **段间空行（中英文块同规）**：六个字段行之间、每条 `<Subject N>` / `<Picture N>` 标签行之间、
+  每个 `[Shot N]` 段之间一律空一行；H3 按行首字段名认段，空行只为提交前按段核对边界。
 - **条目独立成行、标签打头**：`subject_definitions:` 之后每个被单独追踪的主体各占一行，标签写在行首（官方写法）；
   图只用于定义某个 Subject 时在定义行内写 `in <Picture N>`，不另起一行。
 - **summary 首行任务类型前缀**：默认 `[reference generation]`；关键帧当首/尾帧用写 `keyframe completion`，

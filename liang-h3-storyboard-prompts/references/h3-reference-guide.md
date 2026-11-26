@@ -86,6 +86,10 @@ a pale green jade bracelet on her left wrist. She never smiles.`——颗粒度�
 ## 3. 六段字段逐段写法
 
 六段是**同一条正文、一次提交**。顺序固定，段名英文。
+**排版：段与段之间空一行**——六个字段行之间、`subject_definitions` 内每条 `<Subject N>` /
+`<Picture N>` 标签行之间、`detailed_description` 内每个 `[Shot N]` 段之间都空一行；
+中文对照块同样处理，与英文块段落一一对应。空行只为让提交前能按段核对边界，H3 认行首字段名，
+不认空行。
 
 ### `subject_definitions`
 
